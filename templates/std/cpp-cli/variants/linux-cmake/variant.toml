@@ -1,0 +1,21 @@
+schema_version = 0
+
+id = "linux-cmake"
+description = "A small Linux C++ command-line application using CMake."
+version = "0.1.0"
+
+target_os = "linux"
+build_system = "cmake"
+favorite = false
+
+[[prerequisites]]
+id = "cmake"
+name = "CMake 3.20 or later"
+description = "Required after generation to configure and build the C++ project."
+required_for = "build"
+
+[[prerequisites]]
+id = "cpp_toolchain"
+name = "A C++20/23 toolchain"
+description = "Install GCC, Clang, or another CMake-compatible compiler before building."
+required_for = "build"

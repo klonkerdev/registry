@@ -1,0 +1,21 @@
+schema_version = 0
+
+id = "windows-xmake"
+description = "A small Windows C++ command-line application using xmake."
+version = "0.1.0"
+
+target_os = "windows"
+build_system = "xmake"
+favorite = false
+
+[[prerequisites]]
+id = "xmake"
+name = "xmake"
+description = "Required after generation to configure and build the C++ project."
+required_for = "build"
+
+[[prerequisites]]
+id = "cpp_toolchain"
+name = "A C++20/23 toolchain"
+description = "Install Visual Studio C++ Build Tools, GCC, Clang, or another xmake-compatible compiler before building."
+required_for = "build"

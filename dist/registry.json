@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "registry_id": "klonker.official",
+  "display_name": "Klonker official templates",
+  "templates": [
+    {
+      "family_id": "std.cpp-cli",
+      "variant_id": "linux-cmake",
+      "template_id": "std.cpp-cli.linux-cmake",
+      "name": "C++ CLI",
+      "description": "A small Linux C++ command-line application using CMake.",
+      "version": "0.1.0",
+      "target_os": "linux",
+      "build_system": "cmake",
+      "package_path": "packages/std.cpp-cli.linux-cmake-0.1.0.zip",
+      "license_summary": "Generated source: MIT",
+      "package_sha256": "48630a214f273482d398feae31a92756351a2ffc5bf10993ee4d53935bffd7cc",
+      "package_size_bytes": 908174
+    },
+    {
+      "family_id": "std.cpp-cli",
+      "variant_id": "linux-make",
+      "template_id": "std.cpp-cli.linux-make",
+      "name": "C++ CLI",
+      "description": "A small Linux C++ command-line application using GNU Make.",
+      "version": "0.1.0",
+      "target_os": "linux",
+      "build_system": "make",
+      "package_path": "packages/std.cpp-cli.linux-make-0.1.0.zip",
+      "license_summary": "Generated source: MIT",
+      "package_sha256": "4bbdb11022c8f1d76d2ad74f3c03efb24d97d4ee767f33cc605931976b74b334",
+      "package_size_bytes": 908061
+    },
+    {
+      "family_id": "std.cpp-cli",
+      "variant_id": "linux-xmake",
+      "template_id": "std.cpp-cli.linux-xmake",
+      "name": "C++ CLI",
+      "description": "A small Linux C++ command-line application using xmake.",
+      "version": "0.1.0",
+      "target_os": "linux",
+      "build_system": "xmake",
+      "package_path": "packages/std.cpp-cli.linux-xmake-0.1.0.zip",
+      "license_summary": "Generated source: MIT",
+      "package_sha256": "fc67d606372a4b148320fb0e062d2209bbff9bb4e130b43195dbb9b8c58faf16",
+      "package_size_bytes": 907974
+    },
+    {
+      "family_id": "std.cpp-cli",
+      "variant_id": "windows-cmake",
+      "template_id": "std.cpp-cli.windows-cmake",
+      "name": "C++ CLI",
+      "description": "A small Windows C++ command-line application using CMake.",
+      "version": "0.1.0",
+      "target_os": "windows",
+      "build_system": "cmake",
+      "package_path": "packages/std.cpp-cli.windows-cmake-0.1.0.zip",
+      "license_summary": "Generated source: MIT",
+      "package_sha256": "2bb3276144a3d42a7cd818da97cc310bdfc3feadd1f5c12157a60bd4dc192f37",
+      "package_size_bytes": 908147
+    },
+    {
+      "family_id": "std.cpp-cli",
+      "variant_id": "windows-make",
+      "template_id": "std.cpp-cli.windows-make",
+      "name": "C++ CLI",
+      "description": "A small Windows C++ command-line application using GNU Make.",
+      "version": "0.1.0",
+      "target_os": "windows",
+      "build_system": "make",
+      "package_path": "packages/std.cpp-cli.windows-make-0.1.0.zip",
+      "license_summary": "Generated source: MIT",
+      "package_sha256": "a44aab59ad2d8fc5dfe6905638a7022b8d3aee838609c441275c238831831d70",
+      "package_size_bytes": 908143
+    },
+    {
+      "family_id": "std.cpp-cli",
+      "variant_id": "windows-xmake",
+      "template_id": "std.cpp-cli.windows-xmake",
+      "name": "C++ CLI",
+      "description": "A small Windows C++ command-line application using xmake.",
+      "version": "0.1.0",
+      "target_os": "windows",
+      "build_system": "xmake",
+      "package_path": "packages/std.cpp-cli.windows-xmake-0.1.0.zip",
+      "license_summary": "Generated source: MIT",
+      "package_sha256": "03a768545b93f11a96ca9adfd78e5d6368837103903693d16c9c73baf5021ef9",
+      "package_size_bytes": 908011
+    }
+  ]
+}

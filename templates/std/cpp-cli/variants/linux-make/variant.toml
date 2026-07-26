@@ -1,0 +1,21 @@
+schema_version = 0
+
+id = "linux-make"
+description = "A small Linux C++ command-line application using GNU Make."
+version = "0.1.0"
+
+target_os = "linux"
+build_system = "make"
+favorite = false
+
+[[prerequisites]]
+id = "gnu_make"
+name = "GNU Make"
+description = "Required after generation to build the C++ project."
+required_for = "build"
+
+[[prerequisites]]
+id = "gnu_cpp_toolchain"
+name = "A GNU-compatible C++20/23 toolchain"
+description = "Install GCC or Clang before building."
+required_for = "build"

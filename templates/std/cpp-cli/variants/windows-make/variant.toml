@@ -1,0 +1,21 @@
+schema_version = 0
+
+id = "windows-make"
+description = "A small Windows C++ command-line application using GNU Make."
+version = "0.1.0"
+
+target_os = "windows"
+build_system = "make"
+favorite = false
+
+[[prerequisites]]
+id = "gnu_make"
+name = "GNU Make"
+description = "Use GNU Make from MSYS2, MinGW, or another compatible Windows environment."
+required_for = "build"
+
+[[prerequisites]]
+id = "gnu_cpp_toolchain"
+name = "A GNU-compatible C++20/23 toolchain"
+description = "Install GCC or Clang in the same environment as GNU Make before building."
+required_for = "build"

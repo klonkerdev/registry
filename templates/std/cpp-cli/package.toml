@@ -1,0 +1,30 @@
+schema_version = 0
+
+namespace = "std"
+id = "cpp-cli"
+
+name = "C++ CLI"
+description = "A small dependency-free C++ command-line starter with a reusable argument parser."
+
+source_license = "MIT"
+license_summary = "Generated source: MIT"
+logo = "template-logo.png"
+tags = ["cli", "native", "starter", "cpp"]
+
+[[parameters]]
+id = "project_name"
+type = "string"
+label = "Project name"
+description = "C++ project and executable name."
+required = true
+default = "MyCliApp"
+validation = "cpp_identifier"
+
+[[parameters]]
+id = "cpp_standard"
+type = "choice"
+label = "C++ standard"
+description = "Language standard used by the generated build configuration."
+required = true
+default = "23"
+values = ["20", "23"]

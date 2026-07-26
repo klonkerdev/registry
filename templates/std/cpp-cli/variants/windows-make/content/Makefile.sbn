@@ -1,0 +1,21 @@
+CXX ?= c++
+CPPFLAGS ?= -Isrc
+CXXFLAGS ?= -std=c++{{ cpp_standard }} -Wall -Wextra -Wpedantic
+LDFLAGS ?=
+
+TARGET := {{ project_name | cpp_identifier }}
+SOURCES := src/main.cpp src/cli/Arguments.cpp
+OBJECTS := $(SOURCES:.cpp=.o)
+
+.PHONY: all clean
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
+
+%.o: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	$(RM) $(OBJECTS) $(TARGET) $(TARGET).exe

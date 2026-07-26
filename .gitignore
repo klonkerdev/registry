@@ -1,0 +1,15 @@
+# Editor and operating-system state
+.idea/
+.vscode/
+.vs/
+*.user
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Local publication and validation staging
+/.registry-build-*/
+/.registry-validate-*/
+/.dist-backup-*/
+
+# Keep dist/: it is the registry's published, raw-downloadable payload.

@@ -1,0 +1,9 @@
+set_project("{{ project_name | cpp_identifier }}")
+set_version("0.1.0")
+set_languages("cxx{{ cpp_standard }}")
+add_rules("mode.debug", "mode.release")
+
+target("{{ project_name | cpp_identifier }}")
+    set_kind("binary")
+    add_files("src/main.cpp", "src/cli/Arguments.cpp")
+    add_includedirs("src")
