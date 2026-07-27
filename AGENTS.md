@@ -8,7 +8,7 @@ distribution artifacts. It does not contain the Klonker desktop application.
 
 - `registry.toml` contains registry-level authority metadata only.
 - `templates/<namespace>/<package>/package.toml` contains shared metadata,
-  parameters, assets, and optional shared content.
+  language, parameters, assets, and optional shared content.
 - `variants/<variant>/variant.toml` contains independently versioned target
   and build-system metadata plus prerequisites.
 - `dist/registry.json` and `dist/packages/` are generated publication files.
@@ -33,7 +33,8 @@ edit generated files in `dist/` by hand.
 ## Security and quality rules
 
 - Treat every template path and expression as untrusted input.
-- Never add hooks, commands, executable setup scripts, or process execution.
+- Never add generator lifecycle hooks, commands, executable setup scripts, or
+  process execution. Payload source code remains inert data to Klonker.
 - Templates must not access the filesystem, network, environment, clocks, or
   arbitrary .NET APIs while rendering.
 - Use only relative package paths. Never add rooted, drive-qualified, UNC,
@@ -42,6 +43,8 @@ edit generated files in `dist/` by hand.
   machine-specific paths.
 - Keep namespace, package, and variant IDs identical to their folder names.
 - Declare the generated source license accurately in `package.toml`.
+- Declare a lowercase language ID in every package. Use
+  `build_system = "none"` for variants that have no build-system concept.
 - Bump a template version whenever published package bytes change.
 - Keep reusable files at package scope and target/build-specific files at
   variant scope. Shared and variant paths must never collide.

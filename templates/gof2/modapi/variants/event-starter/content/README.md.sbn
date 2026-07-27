@@ -1,0 +1,16 @@
+# {{ mod_name }}
+
+An event-driven Galaxy on Fire 2 PC mod by {{ author_name }}.
+
+## Install
+
+1. Install KaamoClubModApi in the Galaxy on Fire 2 game directory.
+2. Generate this project into a folder named `{{ mod_id | snake_case }}`.
+3. Copy that folder to `<Galaxy on Fire 2>/mods/{{ mod_id | snake_case }}/`.
+4. Start the game and inspect the ModAPI console output.
+
+`init.lua` demonstrates one-time initialization plus asteroid and station
+events. Add only event names supported by the installed ModAPI version.
+
+The generated Lua source is licensed under GPL-3.0-only. Klonker generated
+these files but does not install, run, update, or manage the mod afterward.

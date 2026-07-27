@@ -1,0 +1,17 @@
+# {{ mod_name }}
+
+An ImGui-based Galaxy on Fire 2 PC utility menu by {{ author_name }}.
+
+Generate into `{{ mod_id | snake_case }}` and copy the complete folder to:
+
+```text
+<Galaxy on Fire 2>/mods/{{ mod_id | snake_case }}/
+```
+
+`init.lua` registers a window with `RegisterWindow`. The configured toggle is
+`{{ toggle_key }}` (`0x2D` is Insert, `0x75` is F6, and `0x76` is F7).
+The final `1` passed to `RegisterWindow` locks game input while the menu is
+open; change it to `0` for a non-blocking overlay.
+
+KaamoClubModApi must already be installed. The generated Lua source is
+GPL-3.0-only. Klonker does not install or manage the mod after generation.

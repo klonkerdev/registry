@@ -166,7 +166,10 @@ function Assert-PackageArchive {
         [string] $VariantId,
 
         [Parameter(Mandatory)]
-        [string] $Version
+        [string] $Version,
+
+        [Parameter(Mandatory)]
+        [string] $Language
     )
 
     $stream = [System.IO.File]::OpenRead($ArchivePath)
@@ -244,6 +247,7 @@ function Assert-PackageArchive {
                 family_id = $FamilyId
                 variant_id = $VariantId
                 version = $Version
+                language = $Language
             }
             foreach ($expected in $expectedManifestValues.GetEnumerator()) {
                 $actual = Get-TopLevelTomlString `
@@ -360,6 +364,10 @@ function Assert-SourceDefinition {
             -Toml $packageToml `
             -Property 'license_summary' `
             -ManifestPath $packageManifest.FullName
+        $language = Get-TopLevelTomlString `
+            -Toml $packageToml `
+            -Property 'language' `
+            -ManifestPath $packageManifest.FullName
         $variantsRoot = Join-Path -Path $packageManifest.DirectoryName -ChildPath (
             'variants')
         $variantDirectories = @(
@@ -411,6 +419,7 @@ function Assert-SourceDefinition {
                     -Toml $variantToml `
                     -Property 'build_system' `
                     -ManifestPath $variantManifest
+                Language = $language
                 LicenseSummary = $licenseSummary
             })
         }
@@ -470,6 +479,7 @@ function Assert-Registry {
         'version',
         'target_os',
         'build_system',
+        'language',
         'package_path',
         'license_summary',
         'package_sha256',
@@ -513,6 +523,7 @@ function Assert-Registry {
             version = 'Version'
             target_os = 'TargetOs'
             build_system = 'BuildSystem'
+            language = 'Language'
             license_summary = 'LicenseSummary'
         }
         foreach ($mapping in $sourceMappings.GetEnumerator()) {
@@ -571,7 +582,8 @@ function Assert-Registry {
             -TemplateId ([string] $template.template_id) `
             -FamilyId ([string] $template.family_id) `
             -VariantId ([string] $template.variant_id) `
-            -Version ([string] $template.version)
+            -Version ([string] $template.version) `
+            -Language ([string] $template.language)
     }
 }
 

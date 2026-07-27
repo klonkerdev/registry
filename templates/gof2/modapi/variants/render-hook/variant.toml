@@ -1,0 +1,20 @@
+schema_version = 0
+id = "render-hook"
+description = "A 2D rendering hook starter for drawing deterministic text in the main menu and game."
+version = "0.1.0"
+target_os = "windows"
+build_system = "none"
+favorite = false
+tags = ["graphics", "hooks", "overlay"]
+
+[[prerequisites]]
+id = "gof2_pc"
+name = "Galaxy on Fire 2 Full HD for Windows"
+description = "The generated folder is installed beneath the PC game's mods directory."
+required_for = "run"
+
+[[prerequisites]]
+id = "kaamoclub_modapi"
+name = "KaamoClubModApi"
+description = "HookFunction and Render2DContext are provided by the ModAPI runtime."
+required_for = "run"

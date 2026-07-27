@@ -1,0 +1,55 @@
+local state = require("state")
+
+RegisterEvent("EarlyInit", function()
+    state.system_id = system:Create(
+        "{{ mod_id | pascal_case }}",
+        42,
+        24,
+        35,
+        2,
+        1,
+        7,
+        { 26 })
+    state.station_id = station:Create(
+        "Wayfinder",
+        6,
+        3,
+        state.system_id)
+    state.mission_id = mission:Create(
+        state.station_id,
+        "Meet the Wayfinder and collect a delivery.",
+        0)
+end)
+
+RegisterEvent("OnStationDocked", function()
+    if mission.id < 84 then
+        return
+    end
+
+    if state.stage == 0 then
+        mission:Enable(state.mission_id)
+        state.stage = 1
+        return
+    end
+
+    if state.stage == 1 and station.id == state.station_id then
+        mission:Disable(state.mission_id)
+        wait(1)
+        level:CreateDialogueWindow({
+            {
+                name = "Wayfinder",
+                content = "Delivery confirmed. Your payment is ready.",
+                image = state.portrait,
+                isplayer = 0,
+            },
+            {
+                name = "Keith T. Maxwell",
+                content = "Good doing business with you.",
+                image = state.portrait,
+                isplayer = 1,
+            },
+        })
+        player.money = player.money + state.reward
+        state.stage = 2
+    end
+end)

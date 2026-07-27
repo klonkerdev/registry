@@ -1,0 +1,28 @@
+local WINDOW_TITLE = "{{ mod_name | pascal_case }}"
+local TOGGLE_KEY = {{ toggle_key }}
+
+local credits = 0
+local show_status = true
+
+RegisterWindow(WINDOW_TITLE, function()
+    imgui:Text("Player utility")
+    imgui:Separator()
+
+    credits = imgui:SliderInt("Credits", credits, 0, 999999)
+    if imgui:Button("Apply credits") then
+        player.money = credits
+    end
+
+    show_status = imgui:Checkbox("Show status", show_status)
+    if show_status then
+        imgui:ColoredText(
+            "Station " .. station.id .. " / System " .. system.id,
+            0.45,
+            0.78,
+            1.0,
+            1.0)
+    end
+
+    imgui:Separator()
+    imgui:Text("Toggle key: " .. string.format("0x%X", TOGGLE_KEY))
+end, TOGGLE_KEY, 1)

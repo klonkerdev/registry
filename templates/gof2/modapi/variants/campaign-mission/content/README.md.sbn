@@ -1,0 +1,16 @@
+# {{ mod_name }}
+
+A compact Galaxy on Fire 2 PC campaign mission starter by {{ author_name }}.
+
+The generated layout deliberately keeps mutable mission state in `state.lua`;
+ModAPI adds this directory to Lua's module search path before executing
+`init.lua`, so `require("state")` resolves beside the entry point.
+
+Generate into `{{ mod_id | snake_case }}` and copy the folder to the game's
+`mods` directory. Review the example system coordinates, linked system ID,
+textures, mission gate, dialogue portraits, and reward before shipping a mod.
+Created systems, stations, and missions are registered during `EarlyInit`,
+matching the API's lifecycle restrictions.
+
+The generated source is GPL-3.0-only and detached from Klonker after
+generation.

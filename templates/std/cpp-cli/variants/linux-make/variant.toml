@@ -2,7 +2,7 @@ schema_version = 0
 
 id = "linux-make"
 description = "A small Linux C++ command-line application using GNU Make."
-version = "0.1.0"
+version = "0.1.1"
 
 target_os = "linux"
 build_system = "make"

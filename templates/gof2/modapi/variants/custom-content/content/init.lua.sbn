@@ -1,0 +1,49 @@
+local blueprint_id = 0
+local blueprint_unlocked = false
+
+RegisterEvent("EarlyInit", function()
+    local system_id = system:Create(
+        "{{ mod_id | pascal_case }}",
+        50,
+        30,
+        47,
+        3,
+        3,
+        9,
+        { 26 })
+
+    station:Create("Foundry", 10, 9, system_id)
+    station:Create("Outpost", 4, 3, system_id)
+
+    blueprint_id = item:Create(
+        "Wayfinder Laser",
+        "A custom laser blueprint created by {{ mod_id | snake_case }}.",
+        {
+            type = "Laser",
+            techlevel = 6,
+            baseprice = 18000,
+            minprice = 15000,
+            maxprice = 22000,
+            damage = 95,
+            loadingspeed = 1200,
+            range = 900,
+            speed = 2800,
+            blueprint_ingredient_ids = { 8, 2, 5 },
+            blueprint_ingredient_counts = { 4, 2, 1 },
+        })
+
+    -- To add a custom icon after supplying a compatible .aei file:
+    -- local texture = asset:CreateTexture(
+    --     "mods/{{ mod_id | snake_case }}/assets/item-icon.aei")
+    -- local sprite = asset:CreateSprite(texture, 0)
+    -- Add `spriteicon = sprite` to the item definition above.
+end)
+
+RegisterEvent("IsInGame", function()
+    if blueprint_unlocked or blueprint_id == 0 then
+        return
+    end
+
+    item:UnlockBlueprint(blueprint_id)
+    blueprint_unlocked = true
+end)

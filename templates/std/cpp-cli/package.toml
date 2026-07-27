@@ -6,6 +6,7 @@ id = "cpp-cli"
 name = "C++ CLI"
 description = "A small dependency-free C++ command-line starter with a reusable argument parser."
 
+language = "cpp"
 source_license = "MIT"
 license_summary = "Generated source: MIT"
 logo = "template-logo.png"

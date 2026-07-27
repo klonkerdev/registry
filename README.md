@@ -18,17 +18,29 @@ signature.
 
 | Template | Variant | Version | Generated source license |
 | --- | --- | --- | --- |
-| C++ CLI | Windows + CMake | 0.1.0 | MIT |
-| C++ CLI | Windows + GNU Make | 0.1.0 | MIT |
-| C++ CLI | Windows + xmake | 0.1.0 | MIT |
-| C++ CLI | Linux + CMake | 0.1.0 | MIT |
-| C++ CLI | Linux + GNU Make | 0.1.0 | MIT |
-| C++ CLI | Linux + xmake | 0.1.0 | MIT |
+| C++ CLI | Windows + CMake | 0.1.1 | MIT |
+| C++ CLI | Windows + GNU Make | 0.1.1 | MIT |
+| C++ CLI | Windows + xmake | 0.1.1 | MIT |
+| C++ CLI | Linux + CMake | 0.1.1 | MIT |
+| C++ CLI | Linux + GNU Make | 0.1.1 | MIT |
+| C++ CLI | Linux + xmake | 0.1.1 | MIT |
+| GOF2 ModAPI | Event starter | 0.1.0 | GPL-3.0-only |
+| GOF2 ModAPI | ImGui menu | 0.1.0 | GPL-3.0-only |
+| GOF2 ModAPI | Render hook | 0.1.0 | GPL-3.0-only |
+| GOF2 ModAPI | Campaign mission | 0.1.0 | GPL-3.0-only |
+| GOF2 ModAPI | Custom content | 0.1.0 | GPL-3.0-only |
 
 The C++ CLI family generates a small dependency-free command-line project with
 a reusable argument parser. Windows and Linux variants are available for
 modern target-based CMake, a transparent GNU Makefile, and a concise xmake
 configuration.
+
+The GOF2 ModAPI family generates direct `mods/<mod-id>/init.lua` projects for
+the Windows PC game. Its five variants cover events, ImGui menus, 2D rendering
+hooks, a small campaign mission, and custom systems/items/assets. They declare
+Lua as their language and `none` as their build system. See
+[GOF2 ModAPI templates](docs/gof2-modapi.md) for API provenance, structure,
+licensing, and limitations.
 
 ## Repository layout
 
@@ -62,6 +74,10 @@ Package-level content is merged with the selected variant's content. The
 publisher generates the runtime `template.toml`; source authors maintain only
 `package.toml` and `variant.toml`. Case-insensitive collisions between shared
 and variant files are rejected.
+
+Package metadata declares a language ID. Variant tags are merged with
+package-wide tags into the runtime manifest, so purpose-specific terms such as
+`imgui`, `campaign`, or `assets` remain independently filterable.
 
 `dist/` is intentionally committed. Raw GitHub URLs serve those exact files,
 and each index entry points to a package path relative to `dist/registry.json`.
@@ -107,6 +123,15 @@ templates/std/cpp-cli/
     linux-cmake/
     linux-make/
     linux-xmake/
+templates/gof2/modapi/
+  package.toml
+  content/LICENSE.txt
+  variants/
+    event-starter/
+    imgui-menu/
+    render-hook/
+    campaign-mission/
+    custom-content/
 ```
 
 Text files ending in `.sbn` are rendered by Klonker with its restricted
@@ -129,10 +154,11 @@ add it to `%LOCALAPPDATA%\Klonker\registries.json`:
 
 ## Security and lifecycle
 
-Template packages are data, never trusted programs. Official templates may
-not define or invoke arbitrary commands, scripts, build tools, installers, or
-network access. Paths are validated again by Klonker before planning and
-generation.
+Template packages are data, never trusted programs. Official manifests may
+not define or invoke arbitrary commands, generator hooks, build tools,
+installers, or network access. Source-code payloads such as Lua remain inert:
+Klonker renders and writes them but never executes them. Paths are validated
+again by Klonker before planning and generation.
 
 Klonker never builds or manages generated projects. After generation, every
 file belongs entirely to the user and is detached from Klonker.

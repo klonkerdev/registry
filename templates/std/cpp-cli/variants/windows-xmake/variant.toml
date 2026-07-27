@@ -2,7 +2,7 @@ schema_version = 0
 
 id = "windows-xmake"
 description = "A small Windows C++ command-line application using xmake."
-version = "0.1.0"
+version = "0.1.1"
 
 target_os = "windows"
 build_system = "xmake"

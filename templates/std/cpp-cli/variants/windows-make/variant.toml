@@ -2,7 +2,7 @@ schema_version = 0
 
 id = "windows-make"
 description = "A small Windows C++ command-line application using GNU Make."
-version = "0.1.0"
+version = "0.1.1"
 
 target_os = "windows"
 build_system = "make"

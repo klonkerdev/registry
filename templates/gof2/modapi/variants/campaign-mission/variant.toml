@@ -1,0 +1,20 @@
+schema_version = 0
+id = "campaign-mission"
+description = "A small campaign mission flow with separate state, a custom system, dialogue, and a reward."
+version = "0.1.0"
+target_os = "windows"
+build_system = "none"
+favorite = false
+tags = ["campaign", "missions", "dialogue"]
+
+[[prerequisites]]
+id = "gof2_pc"
+name = "Galaxy on Fire 2 Full HD for Windows"
+description = "The generated folder is installed beneath the PC game's mods directory."
+required_for = "run"
+
+[[prerequisites]]
+id = "kaamoclub_modapi"
+name = "KaamoClubModApi"
+description = "The system, station, mission, and level Lua APIs are required."
+required_for = "run"

@@ -47,6 +47,7 @@ id = "cpp-cli"
 name = "C++ CLI"
 description = "A small dependency-free C++ command-line starter."
 
+language = "cpp"
 source_license = "MIT"
 license_summary = "Generated source: MIT"
 logo = "template-logo.png"
@@ -62,7 +63,8 @@ validation = "cpp_identifier"
 ```
 
 Version zero permits `[[parameters]]` tables at package scope. The logo is
-optional; all other shown top-level properties are required.
+optional; all other shown top-level properties are required. `language` is a
+lowercase catalog identifier such as `cpp` or `lua`.
 
 ## Variant metadata
 
@@ -76,6 +78,7 @@ version = "0.1.0"
 target_os = "linux"
 build_system = "cmake"
 favorite = false
+tags = ["native", "cmake"]
 
 [[prerequisites]]
 id = "cmake"
@@ -85,8 +88,10 @@ required_for = "build"
 ```
 
 Version zero permits `[[prerequisites]]` and variant-specific
-`[[parameters]]` tables. Duplicate parameter IDs are rejected when Klonker
-loads the generated runtime manifest.
+`[[parameters]]` tables. Variant `tags` are optional and are merged with
+package tags case-insensitively. Duplicate parameter IDs are rejected when
+Klonker loads the generated runtime manifest. `build_system` is always
+explicit; use `none` when no build system exists.
 
 ## Payload composition
 

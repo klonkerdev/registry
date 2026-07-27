@@ -1,0 +1,19 @@
+# {{ mod_name }}
+
+A Galaxy on Fire 2 PC custom-content starter by {{ author_name }}.
+
+Generate into `{{ mod_id | snake_case }}` and copy the folder to:
+
+```text
+<Galaxy on Fire 2>/mods/{{ mod_id | snake_case }}/
+```
+
+`init.lua` creates a system, two stations, an item, and a blueprint during
+`EarlyInit`, then unlocks the blueprint once gameplay is active. Adjust IDs,
+coordinates, factions, item balance, and ingredients before release.
+
+The `assets` directory contains integration guidance only. Add assets you have
+the right to distribute, then enable the commented texture/sprite code.
+
+The generated Lua source is GPL-3.0-only. Klonker does not install, execute,
+or manage the mod after generation.

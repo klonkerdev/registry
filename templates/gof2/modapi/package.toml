@@ -1,0 +1,36 @@
+schema_version = 0
+
+namespace = "gof2"
+id = "modapi"
+
+name = "GOF2 ModAPI"
+description = "Lua starters for Galaxy on Fire 2 PC mods using KaamoClubModApi."
+
+language = "lua"
+source_license = "GPL-3.0-only"
+license_summary = "Generated Lua source: GPL-3.0-only"
+tags = ["lua", "gof2", "modding", "gamedev"]
+
+[[parameters]]
+id = "mod_name"
+type = "string"
+label = "Mod name"
+description = "Human-readable name used in the generated documentation."
+required = true
+default = "My GOF2 Mod"
+
+[[parameters]]
+id = "mod_id"
+type = "string"
+label = "Mod folder ID"
+description = "Normalized identifier for logs and the folder copied beneath the game's mods directory."
+required = true
+default = "my_gof2_mod"
+
+[[parameters]]
+id = "author_name"
+type = "string"
+label = "Author"
+description = "Author name written to the generated README."
+required = true
+default = "Your Name"

@@ -1,0 +1,13 @@
+# {{ mod_name }}
+
+A Galaxy on Fire 2 PC 2D-render hook starter by {{ author_name }}.
+
+Generate into `{{ mod_id | snake_case }}`, then copy that folder beneath the
+game's `mods` directory. `init.lua` hooks the ModAPI main-menu and in-game 2D
+render entry points and preserves each original call with `ctx:call()`.
+
+The sample intentionally draws text only. If you add images, create the asset
+through the ModAPI and pass its sprite ID to `ctx:DrawImage2D`.
+
+The generated Lua source is GPL-3.0-only. Klonker does not install, execute,
+or manage it after generation.

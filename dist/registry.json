@@ -4,18 +4,94 @@
   "display_name": "Klonker official templates",
   "templates": [
     {
+      "family_id": "gof2.modapi",
+      "variant_id": "campaign-mission",
+      "template_id": "gof2.modapi.campaign-mission",
+      "name": "GOF2 ModAPI",
+      "description": "A small campaign mission flow with separate state, a custom system, dialogue, and a reward.",
+      "version": "0.1.0",
+      "target_os": "windows",
+      "build_system": "none",
+      "language": "lua",
+      "package_path": "packages/gof2.modapi.campaign-mission-0.1.0.zip",
+      "license_summary": "Generated Lua source: GPL-3.0-only",
+      "package_sha256": "8f2ccc1e5dacbcbafb324b48a0eb2c70e607ef5e89de1235bcd9efd35c198679",
+      "package_size_bytes": 14435
+    },
+    {
+      "family_id": "gof2.modapi",
+      "variant_id": "custom-content",
+      "template_id": "gof2.modapi.custom-content",
+      "name": "GOF2 ModAPI",
+      "description": "A custom system, stations, item, blueprint, and asset-folder starter.",
+      "version": "0.1.0",
+      "target_os": "windows",
+      "build_system": "none",
+      "language": "lua",
+      "package_path": "packages/gof2.modapi.custom-content-0.1.0.zip",
+      "license_summary": "Generated Lua source: GPL-3.0-only",
+      "package_sha256": "f5c1503758cf0d90bab896c079ba8399ce4d599e085559db1f0c146c60a5f7f2",
+      "package_size_bytes": 14641
+    },
+    {
+      "family_id": "gof2.modapi",
+      "variant_id": "event-starter",
+      "template_id": "gof2.modapi.event-starter",
+      "name": "GOF2 ModAPI",
+      "description": "A minimal event-driven Lua mod with one-time initialization and gameplay event handlers.",
+      "version": "0.1.0",
+      "target_os": "windows",
+      "build_system": "none",
+      "language": "lua",
+      "package_path": "packages/gof2.modapi.event-starter-0.1.0.zip",
+      "license_summary": "Generated Lua source: GPL-3.0-only",
+      "package_sha256": "af2ab1e0b8f6c047ffae3c460c6564bdaf752d71348a279d7245048b5cc57393",
+      "package_size_bytes": 13925
+    },
+    {
+      "family_id": "gof2.modapi",
+      "variant_id": "imgui-menu",
+      "template_id": "gof2.modapi.imgui-menu",
+      "name": "GOF2 ModAPI",
+      "description": "An in-game ImGui utility menu registered with a configurable keyboard toggle.",
+      "version": "0.1.0",
+      "target_os": "windows",
+      "build_system": "none",
+      "language": "lua",
+      "package_path": "packages/gof2.modapi.imgui-menu-0.1.0.zip",
+      "license_summary": "Generated Lua source: GPL-3.0-only",
+      "package_sha256": "334c30feceda42ceac7c761c54449664fee4ba0d0effabab11da911398172a71",
+      "package_size_bytes": 14142
+    },
+    {
+      "family_id": "gof2.modapi",
+      "variant_id": "render-hook",
+      "template_id": "gof2.modapi.render-hook",
+      "name": "GOF2 ModAPI",
+      "description": "A 2D rendering hook starter for drawing deterministic text in the main menu and game.",
+      "version": "0.1.0",
+      "target_os": "windows",
+      "build_system": "none",
+      "language": "lua",
+      "package_path": "packages/gof2.modapi.render-hook-0.1.0.zip",
+      "license_summary": "Generated Lua source: GPL-3.0-only",
+      "package_sha256": "75a389acf5619f7e3fc44088ab05221a61969f3a272525e9c4de8f37ada1c986",
+      "package_size_bytes": 13940
+    },
+    {
       "family_id": "std.cpp-cli",
       "variant_id": "linux-cmake",
       "template_id": "std.cpp-cli.linux-cmake",
       "name": "C++ CLI",
       "description": "A small Linux C++ command-line application using CMake.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "target_os": "linux",
       "build_system": "cmake",
-      "package_path": "packages/std.cpp-cli.linux-cmake-0.1.0.zip",
+      "language": "cpp",
+      "package_path": "packages/std.cpp-cli.linux-cmake-0.1.1.zip",
       "license_summary": "Generated source: MIT",
-      "package_sha256": "48630a214f273482d398feae31a92756351a2ffc5bf10993ee4d53935bffd7cc",
-      "package_size_bytes": 908174
+      "package_sha256": "212bd8bd29301487d5cd80f3cc5f072ff579920cb4ada00ee72065ac1de502e9",
+      "package_size_bytes": 908180
     },
     {
       "family_id": "std.cpp-cli",
@@ -23,13 +99,14 @@
       "template_id": "std.cpp-cli.linux-make",
       "name": "C++ CLI",
       "description": "A small Linux C++ command-line application using GNU Make.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "target_os": "linux",
       "build_system": "make",
-      "package_path": "packages/std.cpp-cli.linux-make-0.1.0.zip",
+      "language": "cpp",
+      "package_path": "packages/std.cpp-cli.linux-make-0.1.1.zip",
       "license_summary": "Generated source: MIT",
-      "package_sha256": "4bbdb11022c8f1d76d2ad74f3c03efb24d97d4ee767f33cc605931976b74b334",
-      "package_size_bytes": 908061
+      "package_sha256": "7eba6bd31f1d67e7a8a975546bb9ddbafef576c1cb164e7ec9eca037bdab91ec",
+      "package_size_bytes": 908067
     },
     {
       "family_id": "std.cpp-cli",
@@ -37,13 +114,14 @@
       "template_id": "std.cpp-cli.linux-xmake",
       "name": "C++ CLI",
       "description": "A small Linux C++ command-line application using xmake.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "target_os": "linux",
       "build_system": "xmake",
-      "package_path": "packages/std.cpp-cli.linux-xmake-0.1.0.zip",
+      "language": "cpp",
+      "package_path": "packages/std.cpp-cli.linux-xmake-0.1.1.zip",
       "license_summary": "Generated source: MIT",
-      "package_sha256": "fc67d606372a4b148320fb0e062d2209bbff9bb4e130b43195dbb9b8c58faf16",
-      "package_size_bytes": 907974
+      "package_sha256": "d8ac0ee2bd56692463ce11ab647042fc4fa2deebf3bc14a8439280051b4945e9",
+      "package_size_bytes": 907980
     },
     {
       "family_id": "std.cpp-cli",
@@ -51,13 +129,14 @@
       "template_id": "std.cpp-cli.windows-cmake",
       "name": "C++ CLI",
       "description": "A small Windows C++ command-line application using CMake.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "target_os": "windows",
       "build_system": "cmake",
-      "package_path": "packages/std.cpp-cli.windows-cmake-0.1.0.zip",
+      "language": "cpp",
+      "package_path": "packages/std.cpp-cli.windows-cmake-0.1.1.zip",
       "license_summary": "Generated source: MIT",
-      "package_sha256": "2bb3276144a3d42a7cd818da97cc310bdfc3feadd1f5c12157a60bd4dc192f37",
-      "package_size_bytes": 908147
+      "package_sha256": "cc580af98b9b7006efc0f4c1653fd42456c50c3c890f577004cb5fa42162f41d",
+      "package_size_bytes": 908153
     },
     {
       "family_id": "std.cpp-cli",
@@ -65,13 +144,14 @@
       "template_id": "std.cpp-cli.windows-make",
       "name": "C++ CLI",
       "description": "A small Windows C++ command-line application using GNU Make.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "target_os": "windows",
       "build_system": "make",
-      "package_path": "packages/std.cpp-cli.windows-make-0.1.0.zip",
+      "language": "cpp",
+      "package_path": "packages/std.cpp-cli.windows-make-0.1.1.zip",
       "license_summary": "Generated source: MIT",
-      "package_sha256": "a44aab59ad2d8fc5dfe6905638a7022b8d3aee838609c441275c238831831d70",
-      "package_size_bytes": 908143
+      "package_sha256": "f2f99d3743cfcca512bf852750227dc142a417f96de460f91abc724f0757da9e",
+      "package_size_bytes": 908148
     },
     {
       "family_id": "std.cpp-cli",
@@ -79,13 +159,14 @@
       "template_id": "std.cpp-cli.windows-xmake",
       "name": "C++ CLI",
       "description": "A small Windows C++ command-line application using xmake.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "target_os": "windows",
       "build_system": "xmake",
-      "package_path": "packages/std.cpp-cli.windows-xmake-0.1.0.zip",
+      "language": "cpp",
+      "package_path": "packages/std.cpp-cli.windows-xmake-0.1.1.zip",
       "license_summary": "Generated source: MIT",
-      "package_sha256": "03a768545b93f11a96ca9adfd78e5d6368837103903693d16c9c73baf5021ef9",
-      "package_size_bytes": 908011
+      "package_sha256": "c85af6cb1743d24e4dd211876cfe33d1eee0bece8f25a547dad1c01ba7848387",
+      "package_size_bytes": 908017
     }
   ]
 }

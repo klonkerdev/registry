@@ -12,7 +12,7 @@ A template should:
 - avoid unnecessary dependencies and downloads;
 - use deterministic declared parameters only;
 - include an accurate source-license declaration;
-- contain no hooks, command execution, installers, or arbitrary scripts;
+- contain no generator hooks, command execution, or installers;
 - generate into a new or empty directory without merging or patching;
 - include a concise generated README that explains the project;
 - remain understandable without Klonker after generation.
@@ -43,11 +43,17 @@ Other namespaces such as `community` or `android` can group separately
 reviewed collections later. A namespace is part of template identity; it does
 not grant trust by itself.
 
-Put parameters, tags, licensing, presentation metadata, and shared files at
-package scope. Put version, target OS, build system, prerequisites, and
-target-specific files at variant scope. Use `.sbn` only for UTF-8 text that
-needs rendering. Store other assets as ordinary files so they are copied
-byte-for-byte.
+Put parameters, language, common tags, licensing, presentation metadata, and
+shared files at package scope. Put version, target OS, build system,
+purpose-specific tags, prerequisites, and target-specific files at variant
+scope. Use the explicit build-system ID `none` when the concept does not
+apply. Use `.sbn` only for UTF-8 text that needs rendering. Store other assets
+as ordinary files so they are copied byte-for-byte.
+
+Source-code templates may generate scripts used by their target platform, but
+Klonker must treat them only as payload bytes. Never add a package mechanism
+that asks Klonker to execute a generated script, installer, build tool, or
+setup command.
 
 All paths must be portable safe relative paths. Do not use:
 

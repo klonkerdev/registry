@@ -1,0 +1,24 @@
+local MOD_ID = "{{ mod_id | snake_case }}"
+
+local state = {
+    announced = false,
+    asteroids_destroyed = 0,
+}
+
+RegisterEvent("IsInGame", function()
+    if state.announced then
+        return
+    end
+
+    print("[" .. MOD_ID .. "] loaded")
+    state.announced = true
+end)
+
+RegisterEvent("OnAsteroidDestroyed", function(count)
+    state.asteroids_destroyed = count
+    print("[" .. MOD_ID .. "] asteroids destroyed: " .. count)
+end)
+
+RegisterEvent("OnStationDocked", function()
+    print("[" .. MOD_ID .. "] docked at station " .. station.id)
+end)
