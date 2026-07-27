@@ -15,5 +15,9 @@ coordinates, factions, item balance, and ingredients before release.
 The `assets` directory contains integration guidance only. Add assets you have
 the right to distribute, then enable the commented texture/sprite code.
 
+Open the generated folder in Visual Studio Code and install its recommended
+Lua extension for ModAPI globals, item and asset table types, signatures, and
+hover documentation. See `MODAPI-DEVELOPMENT.md`.
+
 The generated Lua source is GPL-3.0-only. Klonker does not install, execute,
 or manage the mod after generation.

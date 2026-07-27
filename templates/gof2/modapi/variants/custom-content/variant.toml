@@ -1,7 +1,7 @@
 schema_version = 0
 id = "custom-content"
 description = "A custom system, stations, item, blueprint, and asset-folder starter."
-version = "0.1.0"
+version = "0.2.0"
 target_os = "windows"
 build_system = "none"
 favorite = false

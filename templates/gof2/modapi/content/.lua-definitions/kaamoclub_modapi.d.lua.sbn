@@ -1,0 +1,804 @@
+---@meta
+
+-- KaamoClubModApi Lua 5.4 definitions.
+--
+-- This file mirrors the public sol2 registrations in LuaManager::bind_api()
+-- and the structured table fields read by the bound Game implementations.
+-- It is editor metadata only and must never be required by a runtime mod.
+
+---@alias GOF2EventName
+---| "EarlyInit" # Fired once before custom content arrays are finalized.
+---| "OnJoinGame" # Fired once when entering gameplay or a station.
+---| "IsInGame" # Fired every update while in gameplay or a station.
+---| "IsInMainMenu" # Fired every update while the main menu is active.
+---| "OnStationChanged" # Receives the current station ID.
+---| "OnSystemChanged" # Receives the current system ID.
+---| "OnMoneyChanged" # Receives the current credit balance.
+---| "OnEnemieKilled" # Receives the current enemy-kill count. The spelling is part of the API.
+---| "OnCargoChanged" # Receives the current cargo amount.
+---| "OnAsteroidDestroyed" # Receives the current destroyed-asteroid count.
+---| "OnStationDocked" # Fired after docking.
+---| "OnStationUndocked" # Fired after leaving a station for gameplay.
+---| "OnRadarScan" # Receives the newly locked entity.
+---| "OnUpdate" # Fired every update.
+
+---@alias GOF2HookName
+---| "Globals::init"
+---| "AbyssEngine::PaintCanvas::SetColor"
+---| "GameText::getText"
+---| "ImageFactory::loadChar"
+---| "Level::createMission"
+---| "Level::createCampaignMission"
+---| "ModMainMenu::OnRender2D"
+---| "MGame::OnRender2D"
+---| "MenuTouchWindow::OnTouchEnd"
+---| "HangarWindow::render"
+---| "ModStation::OnRender2D"
+---| "StatusWindow::draw"
+
+---@alias GOF2ItemType
+---| "Laser"
+---| "LaserBeam"
+---| "Blaster"
+---| "Booster"
+---| "Cloak"
+---| "Commodity"
+
+---@class GOF2Vector3
+---@field [1] number # X coordinate.
+---@field [2] number # Y coordinate.
+---@field [3] number # Z coordinate.
+
+---@class GOF2Portrait
+---@field race? integer
+---@field hair? integer
+---@field eyes? integer
+---@field mouth? integer
+---@field armor? integer
+
+---@class GOF2PortraitTuple
+---@field [1] integer # Race ID.
+---@field [2] integer # Hair ID.
+---@field [3] integer # Eyes ID.
+---@field [4] integer # Mouth ID.
+---@field [5] integer # Armor ID.
+
+---@class GOF2DialogueEntry
+---@field name string
+---@field content string
+---@field image GOF2PortraitTuple # Dialogue uses a positional five-value portrait.
+---@field isplayer integer # 1 for the player speaker; 0 for another speaker.
+
+---@class GOF2CutscenePoint
+---@field pos GOF2Vector3
+---@field duration number # Duration in seconds.
+---@field shake? number
+---@field shakefrequency? integer
+
+---@class GOF2ShipInfo
+---@field id? integer
+---@field maxhealth? integer
+---@field baseprice? integer
+---@field maxcargo? integer
+---@field cargo? integer
+---@field price? integer
+---@field controlmultiplier? number
+---@field armor? integer
+---@field bonuscargo? integer
+---@field power? number
+
+---@class GOF2EnginePoint
+---@field pos GOF2Vector3
+---@field intensity GOF2Vector3
+
+---@class GOF2CustomShipInfo
+---@field handling? number
+---@field maxhealth? integer
+---@field baseprice? integer
+---@field maxcargo? integer
+---@field armor? integer
+---@field primaryslots? integer
+---@field secondaryslots? integer
+---@field turretslots? integer
+---@field equipmentslots? integer
+---@field hangar_y? number
+---@field spriteicon? integer
+---@field hasjumpdrive? boolean|integer
+---@field enginecolor? integer
+---@field primary_positions? GOF2Vector3[]
+---@field secondary_positions? GOF2Vector3[]
+---@field turret_positions? GOF2Vector3[]
+---@field engines? GOF2EnginePoint[]
+
+---@class GOF2HangarShipInfo
+---@field id? integer
+---@field price? integer
+
+---@class GOF2AgentInfo
+---@field talking_type? integer # 1 for a regular agent or 2 for a seller.
+---@field talking_string? integer # Primary localized text ID.
+---@field talking_string_2? integer # Secondary localized text ID for a seller.
+---@field item_selling? integer
+---@field item_count? integer
+---@field item_price? integer
+---@field auto_talking_string? boolean|integer
+
+---@class GOF2ItemInfo
+---@field type GOF2ItemType
+---@field techlevel? integer
+---@field baseprice? integer
+---@field minprice? integer
+---@field maxprice? integer
+---@field spriteicon? integer
+---@field damage? integer # Laser, LaserBeam, and Blaster.
+---@field loadingspeed? integer # Weapons, Booster, and Cloak.
+---@field range? integer # Laser, LaserBeam, and Blaster.
+---@field speed? integer # Laser, LaserBeam, and Blaster.
+---@field boostduration? integer # Booster.
+---@field effect? integer # Booster and Cloak.
+---@field energyconsumption? integer # Cloak.
+---@field blueprint_ingredient_ids? integer[]
+---@field blueprint_ingredient_counts? integer[]
+
+---@class HookContext
+local HookContext = {}
+
+---Allows the wrapped game function to execute.
+---
+---Some after-render hooks and `Globals::init` do not require this call.
+function HookContext:call() end
+
+---@class MissionContext: HookContext
+local MissionContext = {}
+
+---Creates a fighter in the current mission level.
+---@param mesh_id integer
+---@param faction integer
+---@return KIPlayer
+function MissionContext:CreateFighter(mesh_id, faction) end
+
+---Creates a supported static object in the current mission level.
+---@param object_type integer # 0 for a pirate station; 1 for a Valkyrie turret.
+---@param x number
+---@param y number
+---@param z number
+---@return KIPlayer
+function MissionContext:CreateStaticObject(object_type, x, y, z) end
+
+---@class GlobalsInitContext: HookContext
+local GlobalsInitContext = {}
+
+---Creates a custom ship while `Globals::init` is running.
+---@param name string
+---@param description string
+---@param ship_info GOF2CustomShipInfo
+---@param diffuse_texture integer
+---@param normal_texture integer
+---@param material integer
+---@param lod0_mesh integer
+---@param lod1_mesh integer
+---@param lod2_mesh integer
+---@param mesh_lights? integer
+---@param mesh_lights2? integer
+---@return integer ship_id
+function GlobalsInitContext:CreateShip(
+    name,
+    description,
+    ship_info,
+    diffuse_texture,
+    normal_texture,
+    material,
+    lod0_mesh,
+    lod1_mesh,
+    lod2_mesh,
+    mesh_lights,
+    mesh_lights2)
+    return 0
+end
+
+---Creates a game touch button.
+---@param text string
+---@param subtext string
+---@param x integer
+---@param y integer
+---@param text_color integer
+---@param state integer
+---@param on_click fun()
+---@return TouchButton
+function GlobalsInitContext:CreateTouchButton(
+    text,
+    subtext,
+    x,
+    y,
+    text_color,
+    state,
+    on_click)
+    return {} ---@type TouchButton
+end
+
+---Creates a yes/no or acknowledgment choice window.
+---@param title string
+---@param description string
+---@param show_buttons boolean
+---@param on_yes fun()
+---@param on_no fun()
+---@return ChoiceWindow
+function GlobalsInitContext:CreateChoiceWindow(
+    title,
+    description,
+    show_buttons,
+    on_yes,
+    on_no)
+    return {} ---@type ChoiceWindow
+end
+
+---@class Render2DContext: HookContext
+local Render2DContext = {}
+
+---@param text string
+---@param x integer
+---@param y integer
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function Render2DContext:DrawString(text, x, y, red, green, blue, alpha) end
+
+---@param image_id integer # ID returned by `asset:Image2DCreate`.
+---@param x integer
+---@param y integer
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function Render2DContext:DrawImage2D(
+    image_id,
+    x,
+    y,
+    red,
+    green,
+    blue,
+    alpha)
+end
+
+---@param button TouchButton
+function Render2DContext:DrawTouchButton(button) end
+
+---@class ModStationWindowContext: Render2DContext
+local ModStationWindowContext = {}
+
+---@class SetColorContext: HookContext
+---@field returnaddr integer # Read-only return address supplied by the hook.
+---@field hexcolor integer # Read-only packed color supplied by the hook.
+local SetColorContext = {}
+
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function SetColorContext:OverrideColor(red, green, blue, alpha) end
+
+---@class GetTextContext: HookContext
+---@field returnaddr integer # Read-only return address supplied by the hook.
+---@field id integer # Read-only game text ID.
+local GetTextContext = {}
+
+---@param text string
+function GetTextContext:OverrideText(text) end
+
+---@class LoadCharContext: HookContext
+---@field returnaddr integer # Read-only return address supplied by the hook.
+local LoadCharContext = {}
+
+---@param race integer
+---@param hair integer
+---@param eyes integer
+---@param mouth integer
+---@param armor integer
+function LoadCharContext:OverrideImage(race, hair, eyes, mouth, armor) end
+
+---@class TouchEndContext: HookContext
+---@field x integer # Read-only touch X coordinate.
+---@field y integer # Read-only touch Y coordinate.
+local TouchEndContext = {}
+
+---@class Player
+---@field money integer
+---@field enemieskilled integer
+---@field level integer
+---@field visitedstations integer
+---@field cargosalvagedcount integer
+---@field asteroidsdestroyedcount integer
+local Player = {}
+
+---@return boolean
+function Player:HasShipArmor() end
+
+---@return boolean
+function Player:IsDocked() end
+
+---Returns an empty table when current ship state is unavailable.
+---@return GOF2ShipInfo
+function Player:GetShipInfo() end
+
+---Updates only the supplied current-ship fields.
+---@param ship_info GOF2ShipInfo
+function Player:SetShipInfo(ship_info) end
+
+---@return boolean
+function Player:HasJumpDrive() end
+
+function Player:ToggleCloaking() end
+
+---@param x number
+---@param y number
+---@param z number
+function Player:SetPosition(x, y, z) end
+
+function Player:ResetGame() end
+
+---@param station_id integer
+function Player:SetStation(station_id) end
+
+---@param slot integer
+---@param item_id integer
+function Player:SetEquipment(slot, item_id) end
+
+---Adds an equipment item. Primary/secondary weapons are not supported here.
+---@param item_id integer
+function Player:AddEquipmentSlot(item_id) end
+
+---@param item_id integer
+function Player:RemoveEquipmentSlot(item_id) end
+
+---@param item_id integer
+---@return boolean
+function Player:HasEquipment(item_id) end
+
+---@class System
+---@field id integer
+---@field name string
+---@field risk integer
+---@field faction integer
+---@field jumpgatestationid integer
+---@field mapcoordinate_x integer
+---@field mapcoordinate_y integer
+---@field mapcoordinate_z integer
+---@field textureid integer
+local System = {}
+
+---Creates a system. Call only from the `EarlyInit` event.
+---@param name string
+---@param x integer
+---@param y integer
+---@param z integer
+---@param faction integer
+---@param risk integer
+---@param texture_id integer
+---@param linked_system_ids integer|integer[]
+---@param jump_gate_station_id? integer
+---@return integer system_id
+function System:Create(
+    name,
+    x,
+    y,
+    z,
+    faction,
+    risk,
+    texture_id,
+    linked_system_ids,
+    jump_gate_station_id)
+    return 0
+end
+
+---@param system_id integer
+---@return boolean
+function System:IsVisible(system_id) end
+
+---@param system_id integer
+---@param visible boolean
+function System:SetVisible(system_id, visible) end
+
+---@param system_id integer
+---@return System|nil
+function System:Get(system_id) end
+
+---@return integer[]
+function System:GetStationsId() end
+
+---@class Mission
+---@field id integer
+---@field completedsidemissions integer
+local Mission = {}
+
+function Mission:EnableValkyrie() end
+
+function Mission:DisableValkyrie() end
+
+function Mission:NextCampaignMission() end
+
+---Creates a custom mission. Call only from the `EarlyInit` event.
+---@param station_id integer
+---@param description string
+---@param mission_type integer # 0 for campaign; 1 for freelance.
+---@return integer mission_id
+function Mission:Create(station_id, description, mission_type) end
+
+---@param mission_id integer
+function Mission:Enable(mission_id) end
+
+---@param mission_id integer
+function Mission:Disable(mission_id) end
+
+---@class Station
+---@field id integer
+---@field name string
+---@field level integer
+---@field hangaritemscount integer
+---@field hangarshipscount integer
+---@field agentscount integer
+local Station = {}
+
+---@return boolean
+function Station:IsVoid() end
+
+---@param hangar_index integer
+---@param ship_info GOF2HangarShipInfo
+function Station:SetHangarShipInfo(hangar_index, ship_info) end
+
+---Creates a station. Call only from the `EarlyInit` event.
+---@param name string
+---@param tech_level integer
+---@param texture_id integer
+---@param system_id integer
+---@return integer station_id
+function Station:Create(name, tech_level, texture_id, system_id) end
+
+---@param agent_index integer
+---@return string
+function Station:GetAgentName(agent_index) end
+
+---@param agent_index integer
+---@return integer
+function Station:GetAgentFaction(agent_index) end
+
+---@param name string
+---@param faction_type integer
+---@param terran_woman integer
+---@param image_info GOF2Portrait
+---@param agent_info GOF2AgentInfo
+function Station:CreateAgent(
+    name,
+    faction_type,
+    terran_woman,
+    image_info,
+    agent_info)
+end
+
+---@param item_id integer
+function Station:RemoveHangarItem(item_id) end
+
+---@param item_id integer
+---@return boolean
+function Station:HasItemInHangar(item_id) end
+
+---@param ship_id integer
+function Station:AddHangarShip(ship_id) end
+
+---@param station_id integer
+---@return Station|nil
+function Station:Get(station_id) end
+
+---@class Asset
+local Asset = {}
+
+---@param asset_id integer
+---@return string
+function Asset:GetAssetFilePath(asset_id) end
+
+---@param asset_id integer
+---@param file_path string
+function Asset:SetAssetFilePath(asset_id, file_path) end
+
+---@param text_id integer
+---@return string
+function Asset:GetText(text_id) end
+
+---@param file_path string
+---@return integer texture_id
+function Asset:CreateTexture(file_path) end
+
+---@param diffuse_texture integer
+---@param normal_texture integer
+---@param shader integer
+---@return integer material_id
+function Asset:CreateMaterial(diffuse_texture, normal_texture, shader) end
+
+---@param file_path string
+---@param material_id integer
+---@return integer mesh_id
+function Asset:CreateMesh(file_path, material_id) end
+
+---Adds a sprite to the game image pool for `Render2DContext:DrawImage2D`.
+---@param sprite_id integer
+---@return integer image_id
+function Asset:Image2DCreate(sprite_id) end
+
+---@param texture_id integer
+---@param region_id integer
+---@return integer sprite_id
+function Asset:CreateSprite(texture_id, region_id) end
+
+---@class Item
+local Item = {}
+
+---Creates an item. Call only from the `EarlyInit` event.
+---@param name string
+---@param description string
+---@param item_info GOF2ItemInfo
+---@return integer item_id
+function Item:Create(name, description, item_info) end
+
+---@param item_id integer
+function Item:UnlockBlueprint(item_id) end
+
+---@param item_id integer
+function Item:LockBlueprint(item_id) end
+
+---@class ChoiceWindow
+local ChoiceWindow = {}
+
+function ChoiceWindow:Show() end
+
+function ChoiceWindow:Hide() end
+
+---@class Level
+local Level = {}
+
+---@param name string
+---@param content string
+---@param image_info GOF2Portrait
+function Level:CreateRadioMessage(name, content, image_info) end
+
+---@param dialogue GOF2DialogueEntry[]
+function Level:CreateDialogueWindow(dialogue) end
+
+---@param camera_points GOF2CutscenePoint[]
+function Level:CreateCutScene(camera_points) end
+
+---@param position_points GOF2Vector3[]
+---@return Route
+function Level:CreateRoute(position_points) end
+
+---@return KIPlayer[]
+function Level:GetEntities() end
+
+---@param x number
+---@param y number
+---@param z number
+---@param scale number
+---@param mesh_id integer
+function Level:CreateAsteroid(x, y, z, scale, mesh_id) end
+
+---@class Engine
+local Engine = {}
+
+---@param module_id integer
+function Engine:SetCurrentApplicationModule(module_id) end
+
+---@class Route
+local Route = {}
+
+---@return boolean
+function Route:IsValid() end
+
+---@class KIPlayer
+local KIPlayer = {}
+
+---@param route Route
+function KIPlayer:SetRoute(route) end
+
+---@class TouchButton
+local TouchButton = {}
+
+---@param text string
+function TouchButton:SetText(text) end
+
+function TouchButton:Show() end
+
+function TouchButton:Hide() end
+
+---@class MemoryUtils
+local MemoryUtils = {}
+
+---Patches a raw byte in the game process. Invalid addresses can crash it.
+---@param address integer
+---@param value integer
+function MemoryUtils:PatchByte(address, value) end
+
+---@param address integer
+---@return integer
+function MemoryUtils:ReadInt(address) end
+
+---@param address integer
+---@param value integer
+function MemoryUtils:WriteInt(address, value) end
+
+---@param address integer
+---@return number
+function MemoryUtils:ReadFloat(address) end
+
+---@param address integer
+---@param value number
+function MemoryUtils:WriteFloat(address, value) end
+
+---@class ImGui
+local ImGui = {}
+
+---@param text string
+function ImGui:Text(text) end
+
+---@param text string
+---@param red number
+---@param green number
+---@param blue number
+---@param alpha number
+function ImGui:ColoredText(text, red, green, blue, alpha) end
+
+---@param label string
+---@return boolean clicked
+function ImGui:Button(label) end
+
+---@param label string
+---@param value boolean
+---@return boolean value
+function ImGui:Checkbox(label, value) end
+
+---@param label string
+---@param value number
+---@param minimum number
+---@param maximum number
+---@return number value
+function ImGui:SliderFloat(label, value, minimum, maximum) end
+
+---@param label string
+---@param value integer
+---@param minimum integer
+---@param maximum integer
+---@return integer value
+function ImGui:SliderInt(label, value, minimum, maximum) end
+
+---@param label string
+---@param value string
+---@return string value
+function ImGui:InputText(label, value) end
+
+---@param label string
+---@param value number
+---@return number value
+function ImGui:InputFloat(label, value) end
+
+---@param label string
+---@param value integer
+---@return integer value
+function ImGui:InputInt(label, value) end
+
+function ImGui:Separator() end
+
+function ImGui:SameLine() end
+
+function ImGui:Spacing() end
+
+---@param title string
+---@param is_open boolean
+function ImGui:SetWindowOpen(title, is_open) end
+
+---@param title string
+---@return boolean
+function ImGui:IsWindowOpen(title) end
+
+---Yields the current ModAPI-managed coroutine for a number of seconds.
+---
+---Do not call this from `EarlyInit`, which is not dispatched as a coroutine.
+---@param seconds number
+function wait(seconds) end
+
+---Registers a callback for a known ModAPI event.
+---@overload fun(name: "EarlyInit", callback: fun())
+---@overload fun(name: "OnJoinGame", callback: fun())
+---@overload fun(name: "IsInGame", callback: fun())
+---@overload fun(name: "IsInMainMenu", callback: fun())
+---@overload fun(name: "OnStationChanged", callback: fun(station_id: integer))
+---@overload fun(name: "OnSystemChanged", callback: fun(system_id: integer))
+---@overload fun(name: "OnMoneyChanged", callback: fun(money: integer))
+---@overload fun(name: "OnEnemieKilled", callback: fun(count: integer))
+---@overload fun(name: "OnCargoChanged", callback: fun(cargo: integer))
+---@overload fun(name: "OnAsteroidDestroyed", callback: fun(count: integer))
+---@overload fun(name: "OnStationDocked", callback: fun())
+---@overload fun(name: "OnStationUndocked", callback: fun())
+---@overload fun(name: "OnRadarScan", callback: fun(entity: KIPlayer))
+---@overload fun(name: "OnUpdate", callback: fun())
+---@param name GOF2EventName
+---@param callback fun(...)
+function RegisterEvent(name, callback) end
+
+---Registers a callback around a known game function hook.
+---@overload fun(name: "Globals::init", callback: fun(context: GlobalsInitContext))
+---@overload fun(name: "AbyssEngine::PaintCanvas::SetColor", callback: fun(context: SetColorContext))
+---@overload fun(name: "GameText::getText", callback: fun(context: GetTextContext))
+---@overload fun(name: "ImageFactory::loadChar", callback: fun(context: LoadCharContext))
+---@overload fun(name: "Level::createMission", callback: fun(context: MissionContext))
+---@overload fun(name: "Level::createCampaignMission", callback: fun(context: MissionContext))
+---@overload fun(name: "ModMainMenu::OnRender2D", callback: fun(context: Render2DContext))
+---@overload fun(name: "MGame::OnRender2D", callback: fun(context: Render2DContext))
+---@overload fun(name: "MenuTouchWindow::OnTouchEnd", callback: fun(context: TouchEndContext))
+---@overload fun(name: "HangarWindow::render", callback: fun(context: ModStationWindowContext))
+---@overload fun(name: "ModStation::OnRender2D", callback: fun(context: Render2DContext))
+---@overload fun(name: "StatusWindow::draw", callback: fun(context: ModStationWindowContext))
+---@param name GOF2HookName
+---@param callback fun(context: HookContext)
+function HookFunction(name, callback) end
+
+---Registers an ImGui window while `init.lua` is loading.
+---@param title string
+---@param draw fun()
+---@param toggle_key integer # Windows virtual-key code.
+---@param lock_input boolean|integer # `true`/1 locks game input while open.
+function RegisterWindow(title, draw, toggle_key, lock_input) end
+
+---@type Player
+player = {
+    money = 0,
+    enemieskilled = 0,
+    level = 0,
+    visitedstations = 0,
+    cargosalvagedcount = 0,
+    asteroidsdestroyedcount = 0,
+}
+
+---@type System
+system = {
+    id = 0,
+    name = "",
+    risk = 0,
+    faction = 0,
+    jumpgatestationid = 0,
+    mapcoordinate_x = 0,
+    mapcoordinate_y = 0,
+    mapcoordinate_z = 0,
+    textureid = 0,
+}
+
+---@type Mission
+mission = {
+    id = 0,
+    completedsidemissions = 0,
+}
+
+---@type Station
+station = {
+    id = 0,
+    name = "",
+    level = 0,
+    hangaritemscount = 0,
+    hangarshipscount = 0,
+    agentscount = 0,
+}
+
+---@type Asset
+asset = {}
+
+---@type Item
+item = {}
+
+---@type Level
+level = {}
+
+---@type MemoryUtils
+memoryutils = {}
+
+---@type ImGui
+imgui = {}
+
+---@type Engine
+engine = {}

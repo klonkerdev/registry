@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "runtime": {
+    "version": "Lua 5.4",
+    "path": [
+      "?.lua",
+      "?/init.lua"
+    ]
+  },
+  "workspace": {
+    "library": [
+      ".lua-definitions"
+    ],
+    "checkThirdParty": false
+  },
+  "diagnostics": {
+    "libraryFiles": "Disable"
+  },
+  "completion": {
+    "callSnippet": "Replace"
+  },
+  "hint": {
+    "enable": true,
+    "paramName": "All"
+  },
+  "signatureHelp": {
+    "enable": true
+  },
+  "telemetry": {
+    "enable": false
+  }
+}

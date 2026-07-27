@@ -1,7 +1,7 @@
 schema_version = 0
 id = "all-in-one"
 description = "A modular showcase combining events, an ImGui menu, render hooks, a campaign mission, custom content, and asset integration guidance."
-version = "0.1.0"
+version = "0.2.0"
 target_os = "windows"
 build_system = "none"
 favorite = false

@@ -12,5 +12,9 @@ textures, mission gate, dialogue portraits, and reward before shipping a mod.
 Created systems, stations, and missions are registered during `EarlyInit`,
 matching the API's lifecycle restrictions.
 
+Open the generated folder in Visual Studio Code and install its recommended
+Lua extension for ModAPI globals, dialogue and mission table types, signatures,
+and hover documentation. See `MODAPI-DEVELOPMENT.md`.
+
 The generated source is GPL-3.0-only and detached from Klonker after
 generation.

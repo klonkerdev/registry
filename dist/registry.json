@@ -9,14 +9,14 @@
       "template_id": "gof2.modapi.all-in-one",
       "name": "GOF2 ModAPI",
       "description": "A modular showcase combining events, an ImGui menu, render hooks, a campaign mission, custom content, and asset integration guidance.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "target_os": "windows",
       "build_system": "none",
       "language": "lua",
-      "package_path": "packages/gof2.modapi.all-in-one-0.1.0.zip",
+      "package_path": "packages/gof2.modapi.all-in-one-0.2.0.zip",
       "license_summary": "Generated Lua source: GPL-3.0-only",
-      "package_sha256": "6e857a6ded48a3619d254e8d1e941d5bf63ff49a81757fce6b1c85517f641298",
-      "package_size_bytes": 17575
+      "package_sha256": "957a13695f3aad1fbec1de46a6dc855b938c6b12f4b75a30b6c6aa49d5b2f0c3",
+      "package_size_bytes": 25030
     },
     {
       "family_id": "gof2.modapi",
@@ -24,14 +24,14 @@
       "template_id": "gof2.modapi.campaign-mission",
       "name": "GOF2 ModAPI",
       "description": "A small campaign mission flow with separate state, a custom system, dialogue, and a reward.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "target_os": "windows",
       "build_system": "none",
       "language": "lua",
-      "package_path": "packages/gof2.modapi.campaign-mission-0.1.0.zip",
+      "package_path": "packages/gof2.modapi.campaign-mission-0.2.0.zip",
       "license_summary": "Generated Lua source: GPL-3.0-only",
-      "package_sha256": "8f2ccc1e5dacbcbafb324b48a0eb2c70e607ef5e89de1235bcd9efd35c198679",
-      "package_size_bytes": 14435
+      "package_sha256": "5ce0725d661ca26333382b6513369be1c4cb2910d489dc6cf5de3c72a4b41205",
+      "package_size_bytes": 21843
     },
     {
       "family_id": "gof2.modapi",
@@ -39,14 +39,14 @@
       "template_id": "gof2.modapi.custom-content",
       "name": "GOF2 ModAPI",
       "description": "A custom system, stations, item, blueprint, and asset-folder starter.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "target_os": "windows",
       "build_system": "none",
       "language": "lua",
-      "package_path": "packages/gof2.modapi.custom-content-0.1.0.zip",
+      "package_path": "packages/gof2.modapi.custom-content-0.2.0.zip",
       "license_summary": "Generated Lua source: GPL-3.0-only",
-      "package_sha256": "f5c1503758cf0d90bab896c079ba8399ce4d599e085559db1f0c146c60a5f7f2",
-      "package_size_bytes": 14641
+      "package_sha256": "9687a6d96e9204879804d87ddbb83ec9a1edccf588c92c8d6291d81233279d73",
+      "package_size_bytes": 22061
     },
     {
       "family_id": "gof2.modapi",
@@ -54,14 +54,14 @@
       "template_id": "gof2.modapi.event-starter",
       "name": "GOF2 ModAPI",
       "description": "A minimal event-driven Lua mod with one-time initialization and gameplay event handlers.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "target_os": "windows",
       "build_system": "none",
       "language": "lua",
-      "package_path": "packages/gof2.modapi.event-starter-0.1.0.zip",
+      "package_path": "packages/gof2.modapi.event-starter-0.2.0.zip",
       "license_summary": "Generated Lua source: GPL-3.0-only",
-      "package_sha256": "af2ab1e0b8f6c047ffae3c460c6564bdaf752d71348a279d7245048b5cc57393",
-      "package_size_bytes": 13925
+      "package_sha256": "95453b7b6d021c70235411f9bf340670cbfe93ac991d30072da3da7d7a13e106",
+      "package_size_bytes": 21325
     },
     {
       "family_id": "gof2.modapi",
@@ -69,14 +69,14 @@
       "template_id": "gof2.modapi.imgui-menu",
       "name": "GOF2 ModAPI",
       "description": "An in-game ImGui utility menu registered with a configurable keyboard toggle.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "target_os": "windows",
       "build_system": "none",
       "language": "lua",
-      "package_path": "packages/gof2.modapi.imgui-menu-0.1.0.zip",
+      "package_path": "packages/gof2.modapi.imgui-menu-0.2.0.zip",
       "license_summary": "Generated Lua source: GPL-3.0-only",
-      "package_sha256": "334c30feceda42ceac7c761c54449664fee4ba0d0effabab11da911398172a71",
-      "package_size_bytes": 14142
+      "package_sha256": "cd9fe82ab2a2d38106c56f5de80b672de9ff554096233adb906e3d1939ef30b6",
+      "package_size_bytes": 21537
     },
     {
       "family_id": "gof2.modapi",
@@ -84,14 +84,14 @@
       "template_id": "gof2.modapi.render-hook",
       "name": "GOF2 ModAPI",
       "description": "A 2D rendering hook starter for drawing deterministic text in the main menu and game.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "target_os": "windows",
       "build_system": "none",
       "language": "lua",
-      "package_path": "packages/gof2.modapi.render-hook-0.1.0.zip",
+      "package_path": "packages/gof2.modapi.render-hook-0.2.0.zip",
       "license_summary": "Generated Lua source: GPL-3.0-only",
-      "package_sha256": "75a389acf5619f7e3fc44088ab05221a61969f3a272525e9c4de8f37ada1c986",
-      "package_size_bytes": 13940
+      "package_sha256": "204cb254c3d55a8cd774d7f8b95ef120db7c1832a72e9de02b17fd10e4fd1862",
+      "package_size_bytes": 21343
     },
     {
       "family_id": "std.cpp-cli",

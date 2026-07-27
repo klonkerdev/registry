@@ -1,0 +1,20 @@
+{
+  "files.associations": {
+    "*.lua": "lua"
+  },
+  "Lua.runtime.version": "Lua 5.4",
+  "Lua.runtime.path": [
+    "?.lua",
+    "?/init.lua"
+  ],
+  "Lua.workspace.library": [
+    "${workspaceFolder}/.lua-definitions"
+  ],
+  "Lua.workspace.checkThirdParty": false,
+  "Lua.diagnostics.libraryFiles": "Disable",
+  "Lua.completion.callSnippet": "Replace",
+  "Lua.hint.enable": true,
+  "Lua.hint.paramName": "All",
+  "Lua.signatureHelp.enable": true,
+  "Lua.telemetry.enable": false
+}

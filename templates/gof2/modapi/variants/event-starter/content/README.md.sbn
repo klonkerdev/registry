@@ -12,5 +12,9 @@ An event-driven Galaxy on Fire 2 PC mod by {{ author_name }}.
 `init.lua` demonstrates one-time initialization plus asteroid and station
 events. Add only event names supported by the installed ModAPI version.
 
+Open the generated folder in Visual Studio Code and install its recommended
+Lua extension for ModAPI globals, event names, callback signatures, and hover
+documentation. See `MODAPI-DEVELOPMENT.md`.
+
 The generated Lua source is licensed under GPL-3.0-only. Klonker generated
 these files but does not install, run, update, or manage the mod afterward.

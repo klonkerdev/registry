@@ -23,22 +23,24 @@ RegisterEvent("EarlyInit", function()
         "Meet the Wayfinder and collect a prototype.",
         0)
 
+    ---@type GOF2ItemInfo
+    local item_info = {
+        type = "Laser",
+        techlevel = 6,
+        baseprice = 18000,
+        minprice = 15000,
+        maxprice = 22000,
+        damage = 95,
+        loadingspeed = 1200,
+        range = 900,
+        speed = 2800,
+        blueprint_ingredient_ids = { 8, 2, 5 },
+        blueprint_ingredient_counts = { 4, 2, 1 },
+    }
     state.blueprint_id = item:Create(
         "Wayfinder Laser",
         "A prototype laser created by " .. state.mod_id .. ".",
-        {
-            type = "Laser",
-            techlevel = 6,
-            baseprice = 18000,
-            minprice = 15000,
-            maxprice = 22000,
-            damage = 95,
-            loadingspeed = 1200,
-            range = 900,
-            speed = 2800,
-            blueprint_ingredient_ids = { 8, 2, 5 },
-            blueprint_ingredient_counts = { 4, 2, 1 },
-        })
+        item_info)
 
     -- To add a custom icon after supplying a compatible .aei file:
     -- local texture = asset:CreateTexture(

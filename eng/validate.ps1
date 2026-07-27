@@ -234,6 +234,24 @@ function Assert-PackageArchive {
                 throw "Package '$TemplateId' must contain template.toml and content files."
             }
 
+            if ($TemplateId.StartsWith(
+                    'gof2.modapi.',
+                    [System.StringComparison]::Ordinal
+                )) {
+                $requiredEditorPaths = @(
+                    'content/.vscode/extensions.json.sbn',
+                    'content/.vscode/settings.json.sbn',
+                    'content/.luarc.json.sbn',
+                    'content/.lua-definitions/kaamoclub_modapi.d.lua.sbn',
+                    'content/MODAPI-DEVELOPMENT.md.sbn'
+                )
+                foreach ($requiredEditorPath in $requiredEditorPaths) {
+                    if (-not $paths.Contains($requiredEditorPath)) {
+                        throw "GOF2 package '$TemplateId' is missing editor support '$requiredEditorPath'."
+                    }
+                }
+            }
+
             if (
                 $null -eq $manifestText -or
                 $manifestText -notmatch

@@ -24,12 +24,12 @@ signature.
 | C++ CLI | Linux + CMake | 0.1.1 | MIT |
 | C++ CLI | Linux + GNU Make | 0.1.1 | MIT |
 | C++ CLI | Linux + xmake | 0.1.1 | MIT |
-| GOF2 ModAPI | Event starter | 0.1.0 | GPL-3.0-only |
-| GOF2 ModAPI | ImGui menu | 0.1.0 | GPL-3.0-only |
-| GOF2 ModAPI | Render hook | 0.1.0 | GPL-3.0-only |
-| GOF2 ModAPI | Campaign mission | 0.1.0 | GPL-3.0-only |
-| GOF2 ModAPI | Custom content | 0.1.0 | GPL-3.0-only |
-| GOF2 ModAPI | All in one | 0.1.0 | GPL-3.0-only |
+| GOF2 ModAPI | Event starter | 0.2.0 | GPL-3.0-only |
+| GOF2 ModAPI | ImGui menu | 0.2.0 | GPL-3.0-only |
+| GOF2 ModAPI | Render hook | 0.2.0 | GPL-3.0-only |
+| GOF2 ModAPI | Campaign mission | 0.2.0 | GPL-3.0-only |
+| GOF2 ModAPI | Custom content | 0.2.0 | GPL-3.0-only |
+| GOF2 ModAPI | All in one | 0.2.0 | GPL-3.0-only |
 
 The C++ CLI family generates a small dependency-free command-line project with
 a reusable argument parser. Windows and Linux variants are available for
@@ -43,6 +43,12 @@ all-in-one showcase combining those capabilities. They declare Lua as their
 language and `none` as their build system. See
 [GOF2 ModAPI templates](docs/gof2-modapi.md) for API provenance, structure,
 licensing, and limitations.
+
+Every GOF2 variant also includes Visual Studio Code workspace settings, a Lua
+extension recommendation, portable LuaLS configuration, and a shared
+`kaamoclub_modapi.d.lua` definition file derived from the public C++ bindings.
+The definitions cover global objects, methods, structured input tables,
+events, hook names, and typed hook callbacks without adding runtime code.
 
 ## Repository layout
 
@@ -128,6 +134,10 @@ templates/std/cpp-cli/
 templates/gof2/modapi/
   package.toml
   content/LICENSE.txt
+  content/.vscode/
+  content/.luarc.json.sbn
+  content/.lua-definitions/kaamoclub_modapi.d.lua.sbn
+  content/MODAPI-DEVELOPMENT.md.sbn
   variants/
     event-starter/
     imgui-menu/

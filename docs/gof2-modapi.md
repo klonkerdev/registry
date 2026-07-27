@@ -25,6 +25,30 @@ and examples:
 - ImGui windows use `RegisterWindow`;
 - wrapping render hooks preserve the original function with `ctx:call()`.
 
+## Editor support
+
+Every generated variant contains:
+
+```text
+.vscode/extensions.json
+.vscode/settings.json
+.luarc.json
+.lua-definitions/kaamoclub_modapi.d.lua
+MODAPI-DEVELOPMENT.md
+```
+
+Visual Studio Code recommends the Lua extension by LuaLS and loads the local
+definition library with Lua 5.4 semantics. The portable `.luarc.json` provides
+the same project model to other LuaLS clients. Definitions cover all globals,
+properties, and methods registered by `LuaManager::bind_api()`, all event
+names triggered by `EventManager`, every hook name triggered by `hooks.cpp`,
+typed hook contexts, and the table fields consumed by item, ship, agent,
+dialogue, cutscene, route, and portrait APIs.
+
+The definition file is inert editor metadata and must not be loaded with
+`require`. It provides no runtime implementation, game binary, ModAPI,
+debugger, or third-party assets.
+
 Users should still confirm behavior against the exact ModAPI release they
 install because the external API can evolve independently from this registry.
 

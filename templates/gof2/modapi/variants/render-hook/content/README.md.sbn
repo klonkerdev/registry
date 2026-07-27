@@ -9,5 +9,9 @@ render entry points and preserves each original call with `ctx:call()`.
 The sample intentionally draws text only. If you add images, create the asset
 through the ModAPI and pass its sprite ID to `ctx:DrawImage2D`.
 
+Open the generated folder in Visual Studio Code and install its recommended
+Lua extension for typed hook contexts, hook-name suggestions, signatures, and
+hover documentation. See `MODAPI-DEVELOPMENT.md`.
+
 The generated Lua source is GPL-3.0-only. Klonker does not install, execute,
 or manage it after generation.

@@ -26,5 +26,10 @@ example IDs, coordinates, balance values, dialogue, and graphics with values
 appropriate for your mod. The project intentionally contains no third-party
 `.aei` assets.
 
+Open the generated folder in Visual Studio Code and install its recommended
+Lua extension for the complete ModAPI definition set, typed hook contexts,
+structured table validation, signatures, and hover documentation. See
+`MODAPI-DEVELOPMENT.md`.
+
 The generated Lua source is GPL-3.0-only. Klonker does not install, execute,
 or manage the mod after generation.

@@ -1,7 +1,7 @@
 schema_version = 0
 id = "render-hook"
 description = "A 2D rendering hook starter for drawing deterministic text in the main menu and game."
-version = "0.1.0"
+version = "0.2.0"
 target_os = "windows"
 build_system = "none"
 favorite = false

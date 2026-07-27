@@ -1,0 +1,38 @@
+# ModAPI editor support
+
+This project includes local type definitions for the Lua API exposed by
+KaamoClubModApi. They provide completion, signature help, hover documentation,
+event and hook name suggestions, callback context types, and validation for
+the structured tables accepted by the bindings.
+
+## Visual Studio Code
+
+1. Open this generated mod folder itself in Visual Studio Code.
+2. Accept the recommendation to install the **Lua** extension by LuaLS
+   (`sumneko.lua`), or install it from the Extensions view.
+3. Open any `.lua` file. The workspace settings select Lua 5.4 and load
+   `.lua-definitions/kaamoclub_modapi.d.lua`.
+4. Type globals such as `player:`, `level:`, `imgui:`, `RegisterEvent(`, or
+   `HookFunction(` to see the available API.
+
+The root `.luarc.json` provides equivalent project configuration for other
+editors that use Lua Language Server.
+
+## Important limits
+
+- The definition file is editor metadata. Do not `require` it and do not copy
+  its empty function bodies into runtime code.
+- The definitions describe the bindings present in the ModAPI source used to
+  create these templates. Confirm behavior against the exact ModAPI release
+  installed with the game.
+- Some APIs are lifecycle-sensitive. In particular, custom systems, stations,
+  missions, and items must be created during `EarlyInit`, and
+  `RegisterWindow` must run while `init.lua` is loading.
+- `memoryutils` and low-level hooks can corrupt game state or crash the
+  process when given invalid addresses, IDs, or context assumptions.
+- The project contains editor configuration only. It does not bundle the
+  ModAPI, a Lua interpreter, debugger, game assets, or the game.
+
+KaamoClubModApi loads this mod through `init.lua`. The `.vscode`,
+`.lua-definitions`, and `.luarc.json` files are development metadata and are
+not executed by Klonker.
