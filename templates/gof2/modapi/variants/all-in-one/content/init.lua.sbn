@@ -1,0 +1,11 @@
+local state = require("state")
+
+-- Each module registers one focused part of the mod while the ModAPI loader
+-- is still executing init.lua in its global registration scope.
+require("content")
+require("events")
+require("mission")
+require("menu")
+require("rendering")
+
+print("[" .. state.mod_id .. "] {{ mod_name }} registered")

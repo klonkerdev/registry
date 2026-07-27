@@ -1,0 +1,29 @@
+schema_version = 0
+id = "all-in-one"
+description = "A modular showcase combining events, an ImGui menu, render hooks, a campaign mission, custom content, and asset integration guidance."
+version = "0.1.0"
+target_os = "windows"
+build_system = "none"
+favorite = false
+tags = ["all-in-one", "events", "imgui", "graphics", "campaign", "assets"]
+
+[[parameters]]
+id = "toggle_key"
+type = "choice"
+label = "Menu toggle key"
+description = "Windows virtual-key code passed to RegisterWindow."
+required = true
+default = "0x2D"
+values = ["0x2D", "0x75", "0x76"]
+
+[[prerequisites]]
+id = "gof2_pc"
+name = "Galaxy on Fire 2 Full HD for Windows"
+description = "The generated folder is installed beneath the PC game's mods directory."
+required_for = "run"
+
+[[prerequisites]]
+id = "kaamoclub_modapi"
+name = "KaamoClubModApi with ImGui Lua bindings"
+description = "The combined example uses the event, hook, ImGui, world, mission, item, and asset APIs."
+required_for = "run"

@@ -5,6 +5,21 @@
   "templates": [
     {
       "family_id": "gof2.modapi",
+      "variant_id": "all-in-one",
+      "template_id": "gof2.modapi.all-in-one",
+      "name": "GOF2 ModAPI",
+      "description": "A modular showcase combining events, an ImGui menu, render hooks, a campaign mission, custom content, and asset integration guidance.",
+      "version": "0.1.0",
+      "target_os": "windows",
+      "build_system": "none",
+      "language": "lua",
+      "package_path": "packages/gof2.modapi.all-in-one-0.1.0.zip",
+      "license_summary": "Generated Lua source: GPL-3.0-only",
+      "package_sha256": "6e857a6ded48a3619d254e8d1e941d5bf63ff49a81757fce6b1c85517f641298",
+      "package_size_bytes": 17575
+    },
+    {
+      "family_id": "gof2.modapi",
       "variant_id": "campaign-mission",
       "template_id": "gof2.modapi.campaign-mission",
       "name": "GOF2 ModAPI",

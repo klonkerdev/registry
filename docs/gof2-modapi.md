@@ -37,6 +37,13 @@ install because the external API can evolve independently from this registry.
 | `render-hook` | main-menu and in-game 2D text hooks | `init.lua`, README, license |
 | `campaign-mission` | custom system/station/mission and dialogue | `init.lua`, `state.lua`, README, license |
 | `custom-content` | systems, stations, item/blueprint, asset guidance | `init.lua`, `assets/README.md`, README, license |
+| `all-in-one` | modular composition of all five focused examples | entry point, six Lua modules, asset guidance, README, license |
+
+The all-in-one variant is a cohesive example rather than a concatenation of
+the focused starters. Its entry point loads separate content, event, mission,
+menu, and rendering modules that coordinate through a shared state module.
+This also demonstrates the loader's local-module support while keeping each
+ModAPI concern independently editable.
 
 All variants target Windows, declare `language = "lua"`, and use
 `build_system = "none"`. Their generated project root is the mod folder

@@ -1,0 +1,48 @@
+local state = require("state")
+
+RegisterEvent("EarlyInit", function()
+    state.system_id = system:Create(
+        "{{ mod_id | pascal_case }}",
+        50,
+        30,
+        47,
+        3,
+        3,
+        9,
+        { 26 })
+
+    state.station_id = station:Create(
+        "Wayfinder",
+        10,
+        9,
+        state.system_id)
+    station:Create("Outpost", 4, 3, state.system_id)
+
+    state.mission_id = mission:Create(
+        state.station_id,
+        "Meet the Wayfinder and collect a prototype.",
+        0)
+
+    state.blueprint_id = item:Create(
+        "Wayfinder Laser",
+        "A prototype laser created by " .. state.mod_id .. ".",
+        {
+            type = "Laser",
+            techlevel = 6,
+            baseprice = 18000,
+            minprice = 15000,
+            maxprice = 22000,
+            damage = 95,
+            loadingspeed = 1200,
+            range = 900,
+            speed = 2800,
+            blueprint_ingredient_ids = { 8, 2, 5 },
+            blueprint_ingredient_counts = { 4, 2, 1 },
+        })
+
+    -- To add a custom icon after supplying a compatible .aei file:
+    -- local texture = asset:CreateTexture(
+    --     "mods/{{ mod_id | snake_case }}/assets/item-icon.aei")
+    -- local sprite = asset:CreateSprite(texture, 0)
+    -- Add `spriteicon = sprite` to the item definition above.
+end)

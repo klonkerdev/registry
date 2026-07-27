@@ -1,0 +1,30 @@
+# {{ mod_name }}
+
+A complete Galaxy on Fire 2 PC ModAPI showcase by {{ author_name }}.
+
+Generate into `{{ mod_id | snake_case }}` and copy the folder to:
+
+```text
+<Galaxy on Fire 2>/mods/{{ mod_id | snake_case }}/
+```
+
+## Included examples
+
+- `init.lua` is the entry point and composes the feature modules.
+- `state.lua` holds the shared, per-mod runtime state.
+- `content.lua` creates a system, stations, mission, item, and blueprint during
+  `EarlyInit`, with commented custom-asset integration.
+- `events.lua` handles game startup, blueprint unlock, and asteroid events.
+- `mission.lua` demonstrates a dock-triggered mission and dialogue reward.
+- `menu.lua` registers an ImGui status and player utility window.
+- `rendering.lua` adds main-menu and in-game 2D hooks while preserving the
+  original render functions.
+- `assets/README.md` explains how to supply compatible assets safely.
+
+The menu uses virtual-key code `{{ toggle_key }}`. Before release, replace
+example IDs, coordinates, balance values, dialogue, and graphics with values
+appropriate for your mod. The project intentionally contains no third-party
+`.aei` assets.
+
+The generated Lua source is GPL-3.0-only. Klonker does not install, execute,
+or manage the mod after generation.

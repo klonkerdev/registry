@@ -1,0 +1,34 @@
+local state = require("state")
+
+local WINDOW_TITLE = "{{ mod_name | pascal_case }}"
+local TOGGLE_KEY = {{ toggle_key }}
+local credits = 0
+
+RegisterWindow(WINDOW_TITLE, function()
+    imgui:Text(state.mod_name)
+    imgui:Separator()
+    imgui:Text("Asteroids destroyed: " .. state.asteroids_destroyed)
+    imgui:Text("Mission stage: " .. state.stage)
+    imgui:Text(
+        state.blueprint_unlocked
+            and "Wayfinder blueprint unlocked"
+            or "Wayfinder blueprint locked")
+
+    imgui:Separator()
+    credits = imgui:SliderInt("Credits", credits, 0, 999999)
+    if imgui:Button("Apply credits") and state.in_game then
+        player.money = credits
+    end
+
+    if not state.in_game then
+        imgui:ColoredText(
+            "Enter the game before applying changes.",
+            1.0,
+            0.72,
+            0.3,
+            1.0)
+    end
+
+    imgui:Separator()
+    imgui:Text("Toggle key: " .. string.format("0x%X", TOGGLE_KEY))
+end, TOGGLE_KEY, 1)

@@ -29,6 +29,7 @@ signature.
 | GOF2 ModAPI | Render hook | 0.1.0 | GPL-3.0-only |
 | GOF2 ModAPI | Campaign mission | 0.1.0 | GPL-3.0-only |
 | GOF2 ModAPI | Custom content | 0.1.0 | GPL-3.0-only |
+| GOF2 ModAPI | All in one | 0.1.0 | GPL-3.0-only |
 
 The C++ CLI family generates a small dependency-free command-line project with
 a reusable argument parser. Windows and Linux variants are available for
@@ -36,9 +37,10 @@ modern target-based CMake, a transparent GNU Makefile, and a concise xmake
 configuration.
 
 The GOF2 ModAPI family generates direct `mods/<mod-id>/init.lua` projects for
-the Windows PC game. Its five variants cover events, ImGui menus, 2D rendering
-hooks, a small campaign mission, and custom systems/items/assets. They declare
-Lua as their language and `none` as their build system. See
+the Windows PC game. Its six variants cover events, ImGui menus, 2D rendering
+hooks, a small campaign mission, custom systems/items/assets, and a modular
+all-in-one showcase combining those capabilities. They declare Lua as their
+language and `none` as their build system. See
 [GOF2 ModAPI templates](docs/gof2-modapi.md) for API provenance, structure,
 licensing, and limitations.
 
@@ -132,6 +134,7 @@ templates/gof2/modapi/
     render-hook/
     campaign-mission/
     custom-content/
+    all-in-one/
 ```
 
 Text files ending in `.sbn` are rendered by Klonker with its restricted
