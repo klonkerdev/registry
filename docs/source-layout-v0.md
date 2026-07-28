@@ -11,6 +11,8 @@ and must never be edited by hand.
 schema_version = 0
 registry_id = "klonker.official"
 display_name = "Klonker official templates"
+publisher_id = "klonker.official"
+signing_key_id = "2026-primary"
 ```
 
 It deliberately contains no template array.
@@ -77,7 +79,6 @@ description = "A small Linux C++ command-line application using CMake."
 version = "0.1.0"
 target_os = "linux"
 build_system = "cmake"
-favorite = false
 tags = ["native", "cmake"]
 
 [[prerequisites]]
@@ -91,7 +92,8 @@ Version zero permits `[[prerequisites]]` and variant-specific
 `[[parameters]]` tables. Variant `tags` are optional and are merged with
 package tags case-insensitively. Duplicate parameter IDs are rejected when
 Klonker loads the generated runtime manifest. `build_system` is always
-explicit; use `none` when no build system exists.
+explicit; use `none` when no build system exists. Favorite state is never
+valid package metadata; Klonker stores it in the user's app-local settings.
 
 ## Payload composition
 
@@ -116,5 +118,8 @@ file/directory collisions. Variant files cannot override shared files.
 
 `eng/build.ps1` discovers every package and variant, composes runtime
 manifests, creates sorted fixed-timestamp ZIPs, calculates SHA-256 and size,
-and emits `dist/registry.json`. `eng/validate.ps1` rebuilds twice and requires
-both builds and committed `dist/` to be byte-for-byte identical.
+and emits `dist/registry.json`, `dist/catalog.json`, and `dist/catalog.md`.
+When a private key is supplied, it also signs the exact index bytes into
+`dist/registry.json.sig.json`. `eng/validate.ps1` rebuilds twice, requires
+generated files and committed `dist/` to match, and verifies the committed
+signature using the versioned public key beneath `keys/`.

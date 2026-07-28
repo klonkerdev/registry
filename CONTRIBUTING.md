@@ -47,8 +47,11 @@ Put parameters, language, common tags, licensing, presentation metadata, and
 shared files at package scope. Put version, target OS, build system,
 purpose-specific tags, prerequisites, and target-specific files at variant
 scope. Use the explicit build-system ID `none` when the concept does not
-apply. Use `.sbn` only for UTF-8 text that needs rendering. Store other assets
-as ordinary files so they are copied byte-for-byte.
+apply. Never declare favorites; those are local user preferences owned by the
+app. Place optional package-specific long-form documentation at
+`templates/<namespace>/<package>/README.md`. Use `.sbn` only for UTF-8 text
+that needs rendering. Store other assets as ordinary files so they are copied
+byte-for-byte.
 
 Source-code templates may generate scripts used by their target platform, but
 Klonker must treat them only as payload bytes. Never add a package mechanism
@@ -74,12 +77,19 @@ package content in place under an existing version.
 Run:
 
 ```powershell
-.\eng\build.ps1
+.\eng\build.ps1 -SigningKeyPath <private-key.pem>
 .\eng\validate.ps1
 ```
 
 Then review the generated `dist/registry.json` diff and confirm that only the
 expected package ZIP artifacts were added or changed.
+
+The signing key can instead be supplied through
+`KLONKER_REGISTRY_SIGNING_KEY`. Private keys must never enter the repository.
+Contributors are not given the official private key. A maintainer must sign
+changed publication artifacts before the pull request's required validation
+can pass. After merge, the protected `main` workflow independently rebuilds
+with the `PRIMARY_KEY_2026` repository secret and rejects any mismatch.
 
 Pull requests should explain:
 

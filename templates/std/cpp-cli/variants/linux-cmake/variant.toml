@@ -2,11 +2,10 @@ schema_version = 0
 
 id = "linux-cmake"
 description = "A small Linux C++ command-line application using CMake."
-version = "0.1.1"
+version = "0.1.2"
 
 target_os = "linux"
 build_system = "cmake"
-favorite = false
 
 [[prerequisites]]
 id = "cmake"

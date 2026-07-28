@@ -1,5 +1,7 @@
 [CmdletBinding()]
-param()
+param(
+    [string] $SigningKeyPath = $env:KLONKER_REGISTRY_SIGNING_KEY
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -55,9 +57,35 @@ function Remove-RepositoryDirectory {
 $published = $false
 $backupCreated = $false
 try {
+    $packArguments = @{
+        SourceRoot = $repositoryRoot
+        OutputRoot = $stagingRoot
+    }
+    if (-not [string]::IsNullOrWhiteSpace($SigningKeyPath)) {
+        $packArguments.SigningKeyPath = $SigningKeyPath
+    }
+
     & (Join-Path -Path $PSScriptRoot -ChildPath 'pack-registry.ps1') `
-        -SourceRoot $repositoryRoot `
-        -OutputRoot $stagingRoot
+        @packArguments
+
+    $newIndexPath = Join-Path -Path $stagingRoot -ChildPath 'registry.json'
+    $newSignaturePath = "$newIndexPath.sig.json"
+    $oldIndexPath = Join-Path -Path $distRoot -ChildPath 'registry.json'
+    $oldSignaturePath = "$oldIndexPath.sig.json"
+    if (
+        [string]::IsNullOrWhiteSpace($SigningKeyPath) -and
+        (Test-Path -LiteralPath $oldSignaturePath -PathType Leaf)
+    ) {
+        $newHash = (Get-FileHash -LiteralPath $newIndexPath -Algorithm SHA256).Hash
+        $oldHash = (Get-FileHash -LiteralPath $oldIndexPath -Algorithm SHA256).Hash
+        if ($newHash -cne $oldHash) {
+            throw (
+                'The registry index changed and must be signed. Pass ' +
+                '-SigningKeyPath or set KLONKER_REGISTRY_SIGNING_KEY.')
+        }
+
+        Copy-Item -LiteralPath $oldSignaturePath -Destination $newSignaturePath
+    }
 
     if (Test-Path -LiteralPath $distRoot) {
         Assert-RepositoryChild -Path $distRoot | Out-Null

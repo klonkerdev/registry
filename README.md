@@ -9,46 +9,19 @@ The public registry index is:
 https://raw.githubusercontent.com/klonkerdev/registry/main/dist/registry.json
 ```
 
-Klonker downloads the index and package ZIPs, verifies their declared size and
-SHA-256, and caches validated packages for offline use. SHA-256 detects
-corruption or unexpected bytes; it is not a cryptographic publisher
-signature.
+Klonker downloads the index and package ZIPs, verifies the detached publisher
+signature plus each declared size and SHA-256, and caches validated artifacts
+for offline use. Publisher trust is pinned in the app rather than accepted
+from registry-controlled metadata.
 
 ## Available templates
 
-| Template | Variant | Version | Generated source license |
-| --- | --- | --- | --- |
-| C++ CLI | Windows + CMake | 0.1.1 | MIT |
-| C++ CLI | Windows + GNU Make | 0.1.1 | MIT |
-| C++ CLI | Windows + xmake | 0.1.1 | MIT |
-| C++ CLI | Linux + CMake | 0.1.1 | MIT |
-| C++ CLI | Linux + GNU Make | 0.1.1 | MIT |
-| C++ CLI | Linux + xmake | 0.1.1 | MIT |
-| GOF2 ModAPI | Event starter | 0.2.0 | GPL-3.0-only |
-| GOF2 ModAPI | ImGui menu | 0.2.0 | GPL-3.0-only |
-| GOF2 ModAPI | Render hook | 0.2.0 | GPL-3.0-only |
-| GOF2 ModAPI | Campaign mission | 0.2.0 | GPL-3.0-only |
-| GOF2 ModAPI | Custom content | 0.2.0 | GPL-3.0-only |
-| GOF2 ModAPI | All in one | 0.2.0 | GPL-3.0-only |
-
-The C++ CLI family generates a small dependency-free command-line project with
-a reusable argument parser. Windows and Linux variants are available for
-modern target-based CMake, a transparent GNU Makefile, and a concise xmake
-configuration.
-
-The GOF2 ModAPI family generates direct `mods/<mod-id>/init.lua` projects for
-the Windows PC game. Its six variants cover events, ImGui menus, 2D rendering
-hooks, a small campaign mission, custom systems/items/assets, and a modular
-all-in-one showcase combining those capabilities. They declare Lua as their
-language and `none` as their build system. See
-[GOF2 ModAPI templates](docs/gof2-modapi.md) for API provenance, structure,
-licensing, and limitations.
-
-Every GOF2 variant also includes Visual Studio Code workspace settings, a Lua
-extension recommendation, portable LuaLS configuration, and a shared
-`kaamoclub_modapi.d.lua` definition file derived from the public C++ bindings.
-The definitions cover global objects, methods, structured input tables,
-events, hook names, and typed hook callbacks without adding runtime code.
+The publisher generates the complete
+[Markdown catalog](dist/catalog.md) and matching
+[machine-readable catalog](dist/catalog.json) from discovered package and
+variant manifests. Adding a package or variant never requires editing this
+README or a handwritten test list. Package-specific long-form documentation
+lives beside its `package.toml` and is linked by the generated catalog.
 
 ## Repository layout
 
@@ -60,6 +33,9 @@ templates/<namespace>/<package>/     Shared package metadata and content
     variant.toml
     content/
 dist/registry.json                   Published machine-generated index
+dist/registry.json.sig.json          Detached publisher signature
+dist/catalog.md                      Generated repository catalog
+dist/catalog.json                    Generated static-site catalog data
 dist/packages/                       Published deterministic package ZIPs
 eng/build.ps1                        Rebuilds dist/
 eng/validate.ps1                     Runs standalone repository validation
@@ -117,36 +93,6 @@ paths for unsafe or colliding entries.
 6. Run `.\eng\validate.ps1`.
 7. Review and commit both source and generated `dist/` changes.
 
-The C++ CLI source demonstrates the layout:
-
-```text
-templates/std/cpp-cli/
-  package.toml
-  template-logo.png
-  content/src/
-  variants/
-    windows-cmake/
-    windows-make/
-    windows-xmake/
-    linux-cmake/
-    linux-make/
-    linux-xmake/
-templates/gof2/modapi/
-  package.toml
-  content/LICENSE.txt
-  content/.vscode/
-  content/.luarc.json.sbn
-  content/.lua-definitions/kaamoclub_modapi.d.lua.sbn
-  content/MODAPI-DEVELOPMENT.md.sbn
-  variants/
-    event-starter/
-    imgui-menu/
-    render-hook/
-    campaign-mission/
-    custom-content/
-    all-in-one/
-```
-
 Text files ending in `.sbn` are rendered by Klonker with its restricted
 Scriban value model; other files are copied byte-for-byte. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for review requirements.
@@ -161,7 +107,17 @@ add it to `%LOCALAPPDATA%\Klonker\registries.json`:
   "name": "Klonker official templates",
   "kind": "remote",
   "location": "https://raw.githubusercontent.com/klonkerdev/registry/main/dist/registry.json",
-  "enabled": true
+  "enabled": true,
+  "require_signature": true,
+  "publisher_id": "klonker.official",
+  "trusted_keys": [
+    {
+      "key_id": "2026-primary",
+      "algorithm": "rsa-pkcs1-sha256",
+      "public_key_spki": "<pinned Base64 SPKI key>",
+      "revoked": false
+    }
+  ]
 }
 ```
 
@@ -175,6 +131,12 @@ again by Klonker before planning and generation.
 
 Klonker never builds or manages generated projects. After generation, every
 file belongs entirely to the user and is detached from Klonker.
+
+The signing key is supplied through `-SigningKeyPath` or
+`KLONKER_REGISTRY_SIGNING_KEY`; private keys are never committed. Rotation
+adds a new pinned public key to Klonker before switching `signing_key_id`.
+Compromised or retired keys remain in local trust metadata as revoked so old
+signatures cannot become trusted again.
 
 Security reports should follow [SECURITY.md](SECURITY.md). Repository tooling
 and documentation are MIT-licensed; generated source licensing is declared
