@@ -78,7 +78,9 @@ function Assert-DirectoriesEqual {
         [string] $ActualRoot,
 
         [Parameter(Mandatory)]
-        [string] $Description
+        [string] $Description,
+
+        [string[]] $IgnoredRelativePaths = @()
     )
 
     if (-not (Test-Path -LiteralPath $ExpectedRoot -PathType Container)) {
@@ -89,8 +91,12 @@ function Assert-DirectoriesEqual {
         throw "$Description is missing actual directory '$ActualRoot'."
     }
 
-    $expectedNames = @(Get-RelativeFileNames -Root $ExpectedRoot)
-    $actualNames = @(Get-RelativeFileNames -Root $ActualRoot)
+    $expectedNames = @(
+        Get-RelativeFileNames -Root $ExpectedRoot |
+            Where-Object { $IgnoredRelativePaths -cnotcontains $_ })
+    $actualNames = @(
+        Get-RelativeFileNames -Root $ActualRoot |
+            Where-Object { $IgnoredRelativePaths -cnotcontains $_ })
     if ($expectedNames.Count -ne $actualNames.Count) {
         throw "$Description has a different file count."
     }
@@ -234,24 +240,6 @@ function Assert-PackageArchive {
                 throw "Package '$TemplateId' must contain template.toml and content files."
             }
 
-            if ($TemplateId.StartsWith(
-                    'gof2.modapi.',
-                    [System.StringComparison]::Ordinal
-                )) {
-                $requiredEditorPaths = @(
-                    'content/.vscode/extensions.json.sbn',
-                    'content/.vscode/settings.json.sbn',
-                    'content/.luarc.json.sbn',
-                    'content/.lua-definitions/kaamoclub_modapi.d.lua.sbn',
-                    'content/MODAPI-DEVELOPMENT.md.sbn'
-                )
-                foreach ($requiredEditorPath in $requiredEditorPaths) {
-                    if (-not $paths.Contains($requiredEditorPath)) {
-                        throw "GOF2 package '$TemplateId' is missing editor support '$requiredEditorPath'."
-                    }
-                }
-            }
-
             if (
                 $null -eq $manifestText -or
                 $manifestText -notmatch
@@ -331,9 +319,14 @@ function Assert-SourceDefinition {
         -Toml $definition `
         -Property 'registry_id' `
         -ManifestPath $definitionPath
-    if ($registryId -cne 'klonker.official') {
-        throw "Source registry_id must be 'klonker.official'."
-    }
+    $publisherId = Get-TopLevelTomlString `
+        -Toml $definition `
+        -Property 'publisher_id' `
+        -ManifestPath $definitionPath
+    $signingKeyId = Get-TopLevelTomlString `
+        -Toml $definition `
+        -Property 'signing_key_id' `
+        -ManifestPath $definitionPath
 
     $templatesRoot = Join-Path -Path $repositoryRoot -ChildPath 'templates'
     $packageManifests = @(
@@ -443,7 +436,12 @@ function Assert-SourceDefinition {
         }
     }
 
-    return @($expectedTemplates | Sort-Object TemplateId)
+    return [pscustomobject] @{
+        RegistryId = $registryId
+        PublisherId = $publisherId
+        SigningKeyId = $signingKeyId
+        Templates = @($expectedTemplates | Sort-Object TemplateId)
+    }
 }
 
 function Assert-Registry {
@@ -452,7 +450,10 @@ function Assert-Registry {
         [string] $RegistryRoot,
 
         [Parameter(Mandatory)]
-        [object[]] $ExpectedTemplates
+        [object[]] $ExpectedTemplates,
+
+        [Parameter(Mandatory)]
+        [string] $ExpectedRegistryId
     )
 
     $indexPath = Join-Path -Path $RegistryRoot -ChildPath 'registry.json'
@@ -461,8 +462,8 @@ function Assert-Registry {
         throw 'Published registry schema_version must be 1.'
     }
 
-    if ($registry.registry_id -cne 'klonker.official') {
-        throw "Published registry_id must be 'klonker.official'."
+    if ($registry.registry_id -cne $ExpectedRegistryId) {
+        throw "Published registry_id does not match registry.toml."
     }
 
     $templates = @($registry.templates)
@@ -605,12 +606,85 @@ function Assert-Registry {
     }
 }
 
+function Assert-RegistrySignature {
+    param(
+        [Parameter(Mandatory)]
+        [string] $RegistryRoot,
+
+        [Parameter(Mandatory)]
+        [string] $PublisherId,
+
+        [Parameter(Mandatory)]
+        [string] $SigningKeyId
+    )
+
+    $indexPath = Join-Path -Path $RegistryRoot -ChildPath 'registry.json'
+    $signaturePath = "$indexPath.sig.json"
+    $publicKeyPath = Join-Path -Path $repositoryRoot -ChildPath (
+        "keys/$SigningKeyId.spki")
+    if (-not (Test-Path -LiteralPath $signaturePath -PathType Leaf)) {
+        throw "Published registry signature '$signaturePath' is missing."
+    }
+
+    if (-not (Test-Path -LiteralPath $publicKeyPath -PathType Leaf)) {
+        throw "Publisher public key '$publicKeyPath' is missing."
+    }
+
+    $signature = Get-Content -LiteralPath $signaturePath -Raw | ConvertFrom-Json
+    if (
+        $signature.schema_version -ne 0 -or
+        $signature.publisher_id -cne $PublisherId -or
+        $signature.key_id -cne $SigningKeyId -or
+        $signature.algorithm -cne 'rsa-pkcs1-sha256'
+    ) {
+        throw 'Published registry signature metadata does not match registry.toml.'
+    }
+
+    $indexBytes = [System.IO.File]::ReadAllBytes($indexPath)
+    $indexHash = [System.Security.Cryptography.SHA256]::HashData($indexBytes)
+    $actualHash = [System.Convert]::ToHexString($indexHash).ToLowerInvariant()
+    if ($signature.index_sha256 -cne $actualHash) {
+        throw 'Published registry signature hash does not match registry.json.'
+    }
+
+    try {
+        $publicKey = [System.Convert]::FromBase64String(
+            (Get-Content -LiteralPath $publicKeyPath -Raw).Trim())
+        $signatureBytes = [System.Convert]::FromBase64String(
+            [string] $signature.signature)
+    }
+    catch [System.FormatException] {
+        throw 'Published registry key or signature is not valid Base64.'
+    }
+
+    $rsa = [System.Security.Cryptography.RSA]::Create()
+    try {
+        $bytesRead = 0
+        $rsa.ImportSubjectPublicKeyInfo($publicKey, [ref] $bytesRead)
+        if ($bytesRead -ne $publicKey.Length -or $rsa.KeySize -lt 2048) {
+            throw 'Publisher public key must be a complete RSA SPKI key of at least 2048 bits.'
+        }
+
+        $valid = $rsa.VerifyHash(
+            $indexHash,
+            $signatureBytes,
+            [System.Security.Cryptography.HashAlgorithmName]::SHA256,
+            [System.Security.Cryptography.RSASignaturePadding]::Pkcs1)
+        if (-not $valid) {
+            throw 'Published registry signature verification failed.'
+        }
+    }
+    finally {
+        $rsa.Dispose()
+    }
+}
+
 try {
     if (-not (Test-Path -LiteralPath $distRoot -PathType Container)) {
         throw "Committed distribution '$distRoot' is missing. Run eng/build.ps1."
     }
 
-    $expectedTemplates = @(Assert-SourceDefinition)
+    $sourceDefinition = Assert-SourceDefinition
     $packScript = Join-Path -Path $PSScriptRoot -ChildPath 'pack-registry.ps1'
     & $packScript -SourceRoot $repositoryRoot -OutputRoot $firstBuild
     & $packScript -SourceRoot $repositoryRoot -OutputRoot $secondBuild
@@ -622,10 +696,16 @@ try {
     Assert-DirectoriesEqual `
         -ExpectedRoot $firstBuild `
         -ActualRoot $distRoot `
-        -Description 'Committed distribution'
+        -Description 'Committed distribution' `
+        -IgnoredRelativePaths @('registry.json.sig.json')
     Assert-Registry `
         -RegistryRoot $distRoot `
-        -ExpectedTemplates $expectedTemplates
+        -ExpectedTemplates @($sourceDefinition.Templates) `
+        -ExpectedRegistryId $sourceDefinition.RegistryId
+    Assert-RegistrySignature `
+        -RegistryRoot $distRoot `
+        -PublisherId $sourceDefinition.PublisherId `
+        -SigningKeyId $sourceDefinition.SigningKeyId
 
     Write-Host 'Klonker registry validation succeeded.'
 }

@@ -1,0 +1,8 @@
+{
+  "schema_version": 0,
+  "publisher_id": "klonker.official",
+  "key_id": "2026-primary",
+  "algorithm": "rsa-pkcs1-sha256",
+  "index_sha256": "32f7bbf8f77d3e38b7d4bca7ecd1aecc9f4af96e497957cb8171c87c3ec68bd1",
+  "signature": "uMvKYLsAQ1Lko9E2sfTiV7oXvgvOqTKWNrPeW8Bxhtu7ap3HrIpo1sBzn7mzU//MyhLTyTrFW/pqrqighwJHS/k901igLBZv0gbdV56uesAZlIuent4OylXsAozKEAdngmG0CPVwUfKxToWmxyztebH6gc5TdbEPb0HGC5EuujkCDGAC2EKuhwL8NSiuGJbasVgs8BFZyTjgo2ZIKplcQaeyP1q2OdwRWxuHGl7aCFgHPccGWeG/rCV7m8Fzxacc4/VrTtTwClsbewBvmeMtITVkBUfS6EvFHViNcyoeP53qiXVZp9yv6w328kXHeflg7HC6lsORZYZ8arZWicxVfhqKu8juTo4gZM2Khfhh/c9/MSWAJYY1TBfzoRTg2kufVHYinvwFX1asNw6x6YDHVRcsDk/6Hlj+YMKfh+zXWpLLyt0eJmZwz7BYFENQEl4ItDYKl2X0+gEIbtmGerwHBCumEAt9RjTDHdX9yEqj9E1/Ln1xzsYEfV3QIwAu5OMd"
+}

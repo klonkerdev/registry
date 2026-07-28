@@ -10,8 +10,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: registry-validation-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
+    name: validate
     runs-on: windows-latest
     timeout-minutes: 10
 
@@ -24,3 +29,42 @@ jobs:
       - name: Validate deterministic registry artifacts
         shell: pwsh
         run: ./eng/validate.ps1
+
+      - name: Verify artifacts with the primary publishing key
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: pwsh
+        env:
+          PRIMARY_KEY_2026: ${{ secrets.PRIMARY_KEY_2026 }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:PRIMARY_KEY_2026)) {
+            throw 'The PRIMARY_KEY_2026 repository secret is not configured.'
+          }
+
+          $keyPath = Join-Path `
+            -Path $env:RUNNER_TEMP `
+            -ChildPath 'registry-signing-2026-primary.pem'
+          try {
+            [System.IO.File]::WriteAllText(
+              $keyPath,
+              $env:PRIMARY_KEY_2026,
+              [System.Text.UTF8Encoding]::new($false))
+
+            ./eng/build.ps1 -SigningKeyPath $keyPath
+
+            $changes = @(git status --porcelain --untracked-files=all -- dist)
+            if ($LASTEXITCODE -ne 0) {
+              throw 'Unable to inspect the rebuilt registry distribution.'
+            }
+
+            if ($changes.Count -ne 0) {
+              $changes | ForEach-Object { Write-Host $_ }
+              throw (
+                'The committed distribution does not match a rebuild signed ' +
+                'with PRIMARY_KEY_2026.')
+            }
+          }
+          finally {
+            if (Test-Path -LiteralPath $keyPath -PathType Leaf) {
+              Remove-Item -LiteralPath $keyPath -Force
+            }
+          }

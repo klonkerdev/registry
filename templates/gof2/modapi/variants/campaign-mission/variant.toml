@@ -1,10 +1,9 @@
 schema_version = 0
 id = "campaign-mission"
 description = "A small campaign mission flow with separate state, a custom system, dialogue, and a reward."
-version = "0.2.0"
+version = "0.2.1"
 target_os = "windows"
 build_system = "none"
-favorite = false
 tags = ["campaign", "missions", "dialogue"]
 
 [[prerequisites]]
