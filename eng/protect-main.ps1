@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param(
-    [string] $Repository = 'klonkerdev/registry'
+    [string] $Repository = 'klonkerdev/registry',
+
+    [string[]] $ReviewBypassUsers = @('SleathCobra')
 )
 
 Set-StrictMode -Version Latest
@@ -30,8 +32,12 @@ $protection = @{
         dismiss_stale_reviews = $true
         require_code_owner_reviews = $true
         required_approving_review_count = 1
-        require_last_push_approval = $true
-        bypass_pull_request_allowances = @{}
+        require_last_push_approval = $false
+        bypass_pull_request_allowances = @{
+            users = @($ReviewBypassUsers)
+            teams = @()
+            apps = @()
+        }
     }
     restrictions = $null
     required_linear_history = $true
@@ -64,4 +70,6 @@ finally {
     }
 }
 
-Write-Host "Protected '$Repository' main branch with validation and review."
+Write-Host (
+    "Protected '$Repository' main branch with validation, review, and " +
+    'an explicit maintainer review bypass.')

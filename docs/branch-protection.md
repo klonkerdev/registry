@@ -22,11 +22,17 @@ An administrator can apply or repair the rule reproducibly:
 The rule requires:
 
 - the generic `validate` job to pass on an up-to-date branch;
-- one approving code-owner review and approval of the latest push;
+- one approving code-owner review for contributors;
 - resolved review conversations;
 - linear history;
 - protection for administrators;
 - no force pushes or branch deletion.
+
+`SleathCobra` has an explicit bypass for the pull-request review requirement
+so the repository's solo maintainer cannot be deadlocked by their own PR. The
+bypass applies only to required pull-request reviews: the `validate` status
+check and the other branch protections continue to apply. Pass a different
+`-ReviewBypassUsers` value when applying the rule if maintainership changes.
 
 The script changes GitHub repository state and therefore requires an
 authenticated `gh` session with repository administration permission.
