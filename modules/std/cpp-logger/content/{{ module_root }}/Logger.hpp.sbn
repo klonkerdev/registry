@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: MIT
+#pragma once
+
+#include <string_view>
+
+namespace {{ logger_namespace }}
+{
+enum class LogLevel
+{
+    Debug,
+    Info,
+    Warning,
+    Error,
+};
+
+class Logger final
+{
+public:
+    Logger() = delete;
+
+    static void set_minimum_level(LogLevel level);
+    static void log(LogLevel level, std::string_view message);
+};
+}

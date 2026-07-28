@@ -72,6 +72,24 @@ its published package bytes change. A shared package change affects every
 variant, so every affected variant version must be bumped. Do not replace
 package content in place under an existing version.
 
+## Module conventions
+
+Place reusable additive modules in:
+
+```text
+modules/<namespace>/<module>/
+  module.toml
+  content/
+```
+
+The manifest ID must be `<namespace>.<module>`. Modules have no family or
+variant. Declare path slots for configurable subtrees and ordinary parameters
+for rendered values. A module may target a non-empty project, but every
+planned output path must be new; packages must never rely on overwriting or
+patching existing files. Post-generation instructions are explanatory text
+only and must never be executable hooks. Bump the module version whenever its
+manifest or content bytes change.
+
 ## Pull request workflow
 
 Run:

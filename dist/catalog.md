@@ -19,3 +19,9 @@ This catalog is generated from every discovered package and variant manifest. Th
 | C++ CLI | windows-make | 0.1.2 | windows | make | cpp | MIT | A small Windows C++ command-line application using GNU Make. |
 | C++ CLI | windows-xmake | 0.1.2 | windows | xmake | cpp | MIT | A small Windows C++ command-line application using xmake. |
 
+## Modules
+
+| Module | Version | Language | License | Description |
+| --- | --- | --- | --- | --- |
+| Simple C++ logger | 0.1.0 | cpp | MIT | Adds a small dependency-free, thread-safe C++17 logger with configurable namespace. |
+
