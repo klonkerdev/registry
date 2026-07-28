@@ -24,6 +24,7 @@ The publisher discovers:
 ```text
 templates/<namespace>/<package>/package.toml
 templates/<namespace>/<package>/variants/<variant>/variant.toml
+modules/<namespace>/<module>/module.toml
 ```
 
 Folder names and declared IDs must match. Identity is derived as:
@@ -36,6 +37,9 @@ Folder names and declared IDs must match. Identity is derived as:
 
 Namespace, package, and variant segments begin with a lowercase letter and
 contain only lowercase letters, numbers, and hyphens.
+
+Module identity is `<namespace>.<module>`. Modules are published in a separate
+index collection and have no package family or variant.
 
 ## Package metadata
 
@@ -114,9 +118,19 @@ The publisher adds a generated `template.toml` at the archive root. It rejects
 unsafe paths, links/reparse points, case-insensitive duplicates, and
 file/directory collisions. Variant files cannot override shared files.
 
+## Modules
+
+A module source contains `module.toml` and a non-empty `content/` tree.
+Version-zero modules declare their ID, version, language, source license,
+optional tags, path slots, ordinary parameters, dependencies, and optional
+post-generation instructions. The module manifest is published unchanged.
+Klonker renders it with the same restricted value model, preflights the
+complete destination tree, and never executes its instructions or overwrites
+existing paths.
+
 ## Publication
 
-`eng/build.ps1` discovers every package and variant, composes runtime
+`eng/build.ps1` discovers every package, variant, and module, composes runtime
 manifests, creates sorted fixed-timestamp ZIPs, calculates SHA-256 and size,
 and emits `dist/registry.json`, `dist/catalog.json`, and `dist/catalog.md`.
 When a private key is supplied, it also signs the exact index bytes into

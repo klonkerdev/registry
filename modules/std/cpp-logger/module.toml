@@ -1,0 +1,38 @@
+schema_version = 0
+id = "std.cpp-logger"
+name = "Simple C++ logger"
+description = "Adds a small dependency-free, thread-safe C++17 logger with configurable namespace."
+version = "0.1.0"
+language = "cpp"
+source_license = "MIT"
+tags = ["cpp", "logging", "utility", "dependency-free"]
+post_generation_instructions = """
+Add {{ module_root }}/Logger.cpp to your build target and add
+{{ module_root }} to that target's include directories.
+
+Include the logger:
+
+#include "Logger.hpp"
+
+Then write a message:
+
+{{ logger_namespace }}::Logger::log(
+    {{ logger_namespace }}::LogLevel::Info,
+    "Application started");
+"""
+
+[[slots]]
+id = "module_root"
+label = "Logger folder"
+description = "Relative folder where Logger.hpp and Logger.cpp will be added."
+required = true
+default = "src/logger"
+
+[[parameters]]
+id = "logger_namespace"
+type = "string"
+label = "C++ namespace"
+description = "Namespace containing Logger and LogLevel."
+required = true
+default = "logging"
+validation = "cpp_identifier"

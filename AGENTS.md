@@ -1,7 +1,7 @@
 # Klonker registry contributor guidance
 
-This repository publishes the official template catalog consumed by Klonker.
-It contains reviewed template sources and deterministic machine-generated
+This repository publishes the official template and module catalog consumed
+by Klonker. It contains reviewed package sources and deterministic machine-generated
 distribution artifacts. It does not contain the Klonker desktop application.
 
 ## Repository layout
@@ -11,6 +11,8 @@ distribution artifacts. It does not contain the Klonker desktop application.
   language, parameters, assets, and optional shared content.
 - `variants/<variant>/variant.toml` contains independently versioned target
   and build-system metadata plus prerequisites.
+- `modules/<namespace>/<module>/module.toml` contains independently versioned
+  additive module metadata, slots, parameters, and inert content.
 - `dist/registry.json` and `dist/packages/` are generated publication files.
 - `eng/build.ps1` discovers all package and variant folders and regenerates
   `dist/`; never maintain a parallel handwritten template list.
@@ -41,11 +43,12 @@ edit generated files in `dist/` by hand.
   traversal, symbolic-link, reparse-point, or case-colliding paths.
 - Keep output deterministic. Do not include timestamps, random values, or
   machine-specific paths.
-- Keep namespace, package, and variant IDs identical to their folder names.
+- Keep namespace, package, variant, and module IDs identical to their folder
+  names.
 - Declare the generated source license accurately in `package.toml`.
 - Declare a lowercase language ID in every package. Use
   `build_system = "none"` for variants that have no build-system concept.
-- Bump a template version whenever published package bytes change.
+- Bump a template or module version whenever published package bytes change.
 - Keep reusable files at package scope and target/build-specific files at
   variant scope. Shared and variant paths must never collide.
 - Prefer small, reviewable changes and keep documentation aligned with actual

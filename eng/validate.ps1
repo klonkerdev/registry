@@ -274,6 +274,118 @@ function Assert-PackageArchive {
     }
 }
 
+function Assert-ModuleArchive {
+    param(
+        [Parameter(Mandatory)]
+        [string] $ArchivePath,
+
+        [Parameter(Mandatory)]
+        [string] $ModuleId,
+
+        [Parameter(Mandatory)]
+        [string] $Version,
+
+        [Parameter(Mandatory)]
+        [string] $Language
+    )
+
+    $stream = [System.IO.File]::OpenRead($ArchivePath)
+    try {
+        $archive = [System.IO.Compression.ZipArchive]::new(
+            $stream,
+            [System.IO.Compression.ZipArchiveMode]::Read,
+            $false)
+        try {
+            $paths = [System.Collections.Generic.HashSet[string]]::new(
+                [System.StringComparer]::OrdinalIgnoreCase)
+            $hasManifest = $false
+            $hasContent = $false
+            $manifestText = $null
+            foreach ($entry in $archive.Entries) {
+                $path = $entry.FullName
+                Assert-SafeRelativePath `
+                    -Path $path `
+                    -Context "Module '$ModuleId'"
+                if (-not $paths.Add($path)) {
+                    throw "Module '$ModuleId' contains case-colliding path '$path'."
+                }
+
+                $unixType = ($entry.ExternalAttributes -shr 16) -band 0xF000
+                $windowsReparse = $entry.ExternalAttributes -band
+                    [int] [System.IO.FileAttributes]::ReparsePoint
+                if ($unixType -eq 0xA000 -or $windowsReparse -ne 0) {
+                    throw "Module '$ModuleId' contains link entry '$path'."
+                }
+
+                if ($path -ceq 'module.toml') {
+                    $hasManifest = $true
+                    $reader = [System.IO.StreamReader]::new(
+                        $entry.Open(),
+                        [System.Text.UTF8Encoding]::new($false, $true),
+                        $false)
+                    try {
+                        $manifestText = $reader.ReadToEnd()
+                    }
+                    finally {
+                        $reader.Dispose()
+                    }
+                }
+
+                if ($path.StartsWith('content/', [System.StringComparison]::Ordinal)) {
+                    $hasContent = $true
+                }
+            }
+
+            foreach ($path in $paths) {
+                $segments = @($path.Split('/'))
+                for ($count = 1; $count -lt $segments.Count; $count++) {
+                    $ancestor = [string]::Join('/', $segments[0..($count - 1)])
+                    if ($paths.Contains($ancestor)) {
+                        throw "Module '$ModuleId' contains file/directory collision '$ancestor'."
+                    }
+                }
+            }
+
+            if (-not $hasManifest -or -not $hasContent) {
+                throw "Module '$ModuleId' must contain module.toml and content files."
+            }
+
+            if (
+                $null -eq $manifestText -or
+                $manifestText -notmatch
+                    '(?m)^\s*schema_version\s*=\s*0\s*(?:#.*)?$'
+            ) {
+                throw "Module '$ModuleId' must contain a schema-version-zero manifest."
+            }
+
+            if ($manifestText -match '(?m)^\s*favorite\s*=') {
+                throw "Module '$ModuleId' cannot persist app-local favorite state."
+            }
+
+            $expectedManifestValues = [ordered] @{
+                id = $ModuleId
+                version = $Version
+                language = $Language
+            }
+            foreach ($expected in $expectedManifestValues.GetEnumerator()) {
+                $actual = Get-TopLevelTomlString `
+                    -Toml $manifestText `
+                    -Property $expected.Key `
+                    -ManifestPath "$ArchivePath!/module.toml"
+                if ($actual -cne $expected.Value) {
+                    throw "Module '$ModuleId' manifest property '$($expected.Key)' does not match the index."
+                }
+            }
+        }
+        finally {
+            $archive.Dispose()
+        }
+    }
+    finally {
+        $stream.Dispose()
+    }
+}
+
 function Get-TopLevelTomlString {
     param(
         [Parameter(Mandatory)]
@@ -436,11 +548,83 @@ function Assert-SourceDefinition {
         }
     }
 
+    $modulesRoot = Join-Path -Path $repositoryRoot -ChildPath 'modules'
+    $moduleManifests = if (
+        Test-Path -LiteralPath $modulesRoot -PathType Container
+    ) {
+        @(
+            Get-ChildItem -LiteralPath $modulesRoot -Filter 'module.toml' -File -Recurse |
+                Sort-Object FullName)
+    }
+    else {
+        @()
+    }
+    $discoveredModules = [System.Collections.Generic.HashSet[string]]::new(
+        [System.StringComparer]::OrdinalIgnoreCase)
+    $expectedModules = [System.Collections.Generic.List[object]]::new()
+    foreach ($moduleManifest in $moduleManifests) {
+        $relativeModulePath = [System.IO.Path]::GetRelativePath(
+            $modulesRoot,
+            $moduleManifest.FullName).Replace('\', '/')
+        $segments = @($relativeModulePath.Split('/'))
+        if (
+            $segments.Count -ne 3 -or
+            $segments[2] -cne 'module.toml'
+        ) {
+            throw "Module '$relativeModulePath' must use <namespace>/<module>/module.toml."
+        }
+
+        $moduleToml = Get-Content -LiteralPath $moduleManifest.FullName -Raw
+        if ($moduleToml -match '(?m)^\s*favorite\s*=') {
+            throw "Module '$relativeModulePath' cannot declare app-local favorite state."
+        }
+
+        $moduleId = Get-TopLevelTomlString `
+            -Toml $moduleToml `
+            -Property 'id' `
+            -ManifestPath $moduleManifest.FullName
+        $expectedModuleId = "$($segments[0]).$($segments[1])"
+        if ($moduleId -cne $expectedModuleId) {
+            throw "Module '$relativeModulePath' ID must match its namespace/module folders."
+        }
+
+        $version = Get-TopLevelTomlString `
+            -Toml $moduleToml `
+            -Property 'version' `
+            -ManifestPath $moduleManifest.FullName
+        $identity = "$moduleId@$version"
+        if (-not $discoveredModules.Add($identity)) {
+            throw "Source registry contains duplicate module '$identity'."
+        }
+
+        $expectedModules.Add([pscustomobject] @{
+            ModuleId = $moduleId
+            Name = Get-TopLevelTomlString `
+                -Toml $moduleToml `
+                -Property 'name' `
+                -ManifestPath $moduleManifest.FullName
+            Description = Get-TopLevelTomlString `
+                -Toml $moduleToml `
+                -Property 'description' `
+                -ManifestPath $moduleManifest.FullName
+            Version = $version
+            Language = Get-TopLevelTomlString `
+                -Toml $moduleToml `
+                -Property 'language' `
+                -ManifestPath $moduleManifest.FullName
+            LicenseSummary = Get-TopLevelTomlString `
+                -Toml $moduleToml `
+                -Property 'source_license' `
+                -ManifestPath $moduleManifest.FullName
+        })
+    }
+
     return [pscustomobject] @{
         RegistryId = $registryId
         PublisherId = $publisherId
         SigningKeyId = $signingKeyId
         Templates = @($expectedTemplates | Sort-Object TemplateId)
+        Modules = @($expectedModules | Sort-Object ModuleId, Version)
     }
 }
 
@@ -451,6 +635,9 @@ function Assert-Registry {
 
         [Parameter(Mandatory)]
         [object[]] $ExpectedTemplates,
+
+        [Parameter(Mandatory)]
+        [object[]] $ExpectedModules,
 
         [Parameter(Mandatory)]
         [string] $ExpectedRegistryId
@@ -604,6 +791,115 @@ function Assert-Registry {
             -Version ([string] $template.version) `
             -Language ([string] $template.language)
     }
+
+    $modules = @($registry.modules)
+    if ($modules.Count -ne $ExpectedModules.Count) {
+        throw "Published registry module count does not match discovered source modules."
+    }
+
+    $moduleIdentities = [System.Collections.Generic.HashSet[string]]::new(
+        [System.StringComparer]::OrdinalIgnoreCase)
+    $requiredModuleProperties = @(
+        'module_id',
+        'name',
+        'description',
+        'version',
+        'language',
+        'package_path',
+        'license_summary',
+        'package_sha256',
+        'package_size_bytes'
+    )
+    foreach ($module in $modules) {
+        $identity = "$($module.module_id)@$($module.version)"
+        if (-not $moduleIdentities.Add($identity)) {
+            throw "Published registry contains duplicate module identity '$identity'."
+        }
+
+        $expectedModule = $ExpectedModules |
+            Where-Object {
+                $_.ModuleId -ceq [string] $module.module_id -and
+                $_.Version -ceq [string] $module.version
+            } |
+            Select-Object -First 1
+        if ($null -eq $expectedModule) {
+            throw "Published module '$identity' has no discovered source."
+        }
+
+        foreach ($property in $requiredModuleProperties) {
+            if (
+                $module.PSObject.Properties.Name -notcontains $property -or
+                [string]::IsNullOrWhiteSpace([string] $module.$property)
+            ) {
+                throw "Published module property '$property' is required."
+            }
+        }
+
+        $sourceMappings = [ordered] @{
+            module_id = 'ModuleId'
+            name = 'Name'
+            description = 'Description'
+            version = 'Version'
+            language = 'Language'
+            license_summary = 'LicenseSummary'
+        }
+        foreach ($mapping in $sourceMappings.GetEnumerator()) {
+            if (
+                [string] $module.($mapping.Key) -cne
+                    [string] $expectedModule.($mapping.Value)
+            ) {
+                throw "Published module '$identity' property '$($mapping.Key)' does not match its TOML source."
+            }
+        }
+
+        Assert-SafeRelativePath `
+            -Path ([string] $module.package_path) `
+            -Context "Registry module '$identity'"
+        if (
+            -not ([string] $module.package_path).StartsWith(
+                'packages/',
+                [System.StringComparison]::Ordinal)
+        ) {
+            throw "Registry module package '$identity' must be beneath packages/."
+        }
+
+        $packagePath = [System.IO.Path]::GetFullPath(
+            (Join-Path -Path $RegistryRoot -ChildPath (
+                ([string] $module.package_path).Replace(
+                    '/',
+                    [System.IO.Path]::DirectorySeparatorChar))))
+        $relative = [System.IO.Path]::GetRelativePath($RegistryRoot, $packagePath)
+        if (
+            [System.IO.Path]::IsPathRooted($relative) -or
+            $relative -eq '..' -or
+            $relative.StartsWith(
+                "..$([System.IO.Path]::DirectorySeparatorChar)",
+                [System.StringComparison]::Ordinal)
+        ) {
+            throw "Registry module package '$identity' resolves outside the distribution."
+        }
+
+        if (-not (Test-Path -LiteralPath $packagePath -PathType Leaf)) {
+            throw "Registry module package '$identity' is missing '$packagePath'."
+        }
+
+        $package = Get-Item -LiteralPath $packagePath
+        if ($package.Length -ne [int64] $module.package_size_bytes) {
+            throw "Registry module package '$identity' has an incorrect size."
+        }
+
+        $actualHash = (Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).
+            Hash.ToLowerInvariant()
+        if ($actualHash -cne [string] $module.package_sha256) {
+            throw "Registry module package '$identity' has an incorrect SHA-256."
+        }
+
+        Assert-ModuleArchive `
+            -ArchivePath $packagePath `
+            -ModuleId ([string] $module.module_id) `
+            -Version ([string] $module.version) `
+            -Language ([string] $module.language)
+    }
 }
 
 function Assert-RegistrySignature {
@@ -701,6 +997,7 @@ try {
     Assert-Registry `
         -RegistryRoot $distRoot `
         -ExpectedTemplates @($sourceDefinition.Templates) `
+        -ExpectedModules @($sourceDefinition.Modules) `
         -ExpectedRegistryId $sourceDefinition.RegistryId
     Assert-RegistrySignature `
         -RegistryRoot $distRoot `

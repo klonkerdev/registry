@@ -1,7 +1,7 @@
-# Klonker official template registry
+# Klonker official registry
 
-This is the source and publication repository for the official templates used
-by Klonker, a Windows-first desktop project generator.
+This is the source and publication repository for the official templates and
+modules used by Klonker, a Windows-first desktop project generator.
 
 The public registry index is:
 
@@ -14,12 +14,12 @@ signature plus each declared size and SHA-256, and caches validated artifacts
 for offline use. Publisher trust is pinned in the app rather than accepted
 from registry-controlled metadata.
 
-## Available templates
+## Available templates and modules
 
 The publisher generates the complete
 [Markdown catalog](dist/catalog.md) and matching
 [machine-readable catalog](dist/catalog.json) from discovered package and
-variant manifests. Adding a package or variant never requires editing this
+variant or module manifests. Adding a package, variant, or module never requires editing this
 README or a handwritten test list. Package-specific long-form documentation
 lives beside its `package.toml` and is linked by the generated catalog.
 
@@ -32,6 +32,9 @@ templates/<namespace>/<package>/     Shared package metadata and content
   variants/<variant>/
     variant.toml
     content/
+modules/<namespace>/<module>/
+  module.toml
+  content/
 dist/registry.json                   Published machine-generated index
 dist/registry.json.sig.json          Detached publisher signature
 dist/catalog.md                      Generated repository catalog
@@ -43,6 +46,7 @@ eng/validate.ps1                     Runs standalone repository validation
 
 There is no handwritten template list. The publisher recursively discovers
 `templates/*/*/package.toml` and each package's `variants/*/variant.toml`.
+It separately discovers `modules/*/*/module.toml`.
 For example:
 
 ```text
@@ -93,6 +97,14 @@ paths for unsafe or colliding entries.
 6. Run `.\eng\validate.ps1`.
 7. Review and commit both source and generated `dist/` changes.
 
+## Add or update a module
+
+1. Add or edit `modules/<namespace>/<module>/module.toml`.
+2. Put inert payload beneath its `content/` directory.
+3. Use slots only for configurable relative destination paths.
+4. Bump the module version whenever published bytes change.
+5. Build, validate, and commit both source and generated `dist/` changes.
+
 Text files ending in `.sbn` are rendered by Klonker with its restricted
 Scriban value model; other files are copied byte-for-byte. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for review requirements.
@@ -123,7 +135,7 @@ add it to `%LOCALAPPDATA%\Klonker\registries.json`:
 
 ## Security and lifecycle
 
-Template packages are data, never trusted programs. Official manifests may
+Template and module packages are data, never trusted programs. Official manifests may
 not define or invoke arbitrary commands, generator hooks, build tools,
 installers, or network access. Source-code payloads such as Lua remain inert:
 Klonker renders and writes them but never executes them. Paths are validated
@@ -140,4 +152,4 @@ signatures cannot become trusted again.
 
 Security reports should follow [SECURITY.md](SECURITY.md). Repository tooling
 and documentation are MIT-licensed; generated source licensing is declared
-per template.
+per package.

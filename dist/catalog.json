@@ -214,5 +214,24 @@
         }
       ]
     }
+  ],
+  "modules": [
+    {
+      "id": "std.cpp-logger",
+      "name": "Simple C++ logger",
+      "description": "Adds a small dependency-free, thread-safe C++17 logger with configurable namespace.",
+      "version": "0.1.0",
+      "language": "cpp",
+      "source_license": "MIT",
+      "tags": [
+        "cpp",
+        "logging",
+        "utility",
+        "dependency-free"
+      ],
+      "package_path": "packages/std.cpp-logger-0.1.0.zip",
+      "package_sha256": "5bba149060fca03abbaa39e7150de21d1e809c50e0a4584613ae3f15328b35bc",
+      "package_size_bytes": 2365
+    }
   ]
 }
